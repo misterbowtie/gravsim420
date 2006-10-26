@@ -15,8 +15,29 @@ solarSys::solarSys(ISceneManager *smgrz, IVideoDriver *driverz)
     smgr = smgrz;
     driver = driverz;
 
-    planetObj *npo = new planetObj(smgr, driver);
-    poList.push_back((*npo));   //i say bagglsy, s is very odd indeeed s?  we don't know their positions though...
+    //planetObj *npo = new planetObj(smgr, driver);
+    //poList.push_back((*npo));   //i say bagglsy, s is very odd indeeed s?  we don't know their positions though...
+
+	planetObj *npo;
+	npo = new planetObj(smgr, driver, vector3df(0,0,0),vector3df(0,-0.8,1.2),vector3df(0,0,0.25),1000, 1000);
+	poList.push_back((*npo));
+	for(int i=0;i<5;i++)
+	{
+		for(int j=0;j<5;j++)
+		{
+			for(int k=0;k<5;k++)
+			{
+				float shit = randf()*(i+j+k)*50+1;
+				npo = new planetObj(smgr, driver,
+					vector3df((i-2.5)*50,(j-2.5)*50,(k-2.5)*50),
+					vector3df((randf()-0.5)*i*5,(randf()-0.5)*j*5,(randf()-0.5)*k*5),
+					vector3df(0,0,randf()),
+					shit,
+					shit);
+	            poList.push_back((*npo));  ///........
+			}
+		}
+	}
 
 
 //    planetObj *sun = new planetObj(smgr, driver, vector3df(0,-0.5f,0),vector3df(0,0.5f,0),vector3df(0,0,0), 999, 999);
@@ -52,7 +73,10 @@ solarSys::solarSys(ISceneManager *smgrz, IVideoDriver *driverz)
     //    poList.push_back((*mercury));
         //poList.push_back((*venus));
     //*/
-    cam = poList.begin();
+    
+	
+	
+	cam = poList.begin();
     if (D)cout<<"\nSolar System Initialized";
 }
 
@@ -87,19 +111,22 @@ vector3df solarSys::updatePhysics()
             vector3df r = (*p2).getPosition() - (*p1).getPosition();
             float dist = r.getLength();
 
-            if ((dist < (*p1).getSize()) || (dist < (*p2).getSize()))  //Could this be dist < p1.size+p2.size ?
+            if ((dist < (*p1).getSize()+(*p2).getSize()))  //Could this be dist < p1.size+p2.size ?
             {
                 (*p1).join(&(*p2));  //Syntax is more or less correct,  strange results though
                 p2 = poList.erase(p2);
             }
             else
             {
-                vector3df force = r.normalize() * G * (*p1).getMass() * (*p2).getMass() / (dist * dist);
+
+			vector3df force = r.normalize() * G * (*p1).getMass() * (*p2).getMass() / (dist * dist);
                 (*p1).addForce(force);
                 (*p2).addForce(-force);
                 p2++;
-            }
-        }
+
+		}
+
+		}
     }
 
     vector3df centerM(0,0,0);
@@ -109,7 +136,7 @@ vector3df solarSys::updatePhysics()
         (*p1).move();
         centerM += (*p1).getPosition()*(*p1).getMass();
     }
-
+/*
     if (poList.size() < 2 && randf()<0.01)
     {
         p1 = poList.begin();
@@ -120,17 +147,16 @@ vector3df solarSys::updatePhysics()
             //THIS JUST SEEMS WRONG!
         }
         if (D) cout << "\nBIG BANG!!!!!";
-
     }
-    //*/
+*/
     if (poSize!=poList.size()) // && D)
     {
-        cout<<"\nPLANET LIST: " << poList.size();
+		if (D){cout<<"\nPLANET LIST: " << poList.size();
         for (p1 = poList.begin(); p1 != poList.end(); p1++)
             (*p1).report();
         cout<<"\nCenter of Mass: "<<centerM.getLength();
         cout<<"\n-----------";
-
+		}
 
     }
     return centerM;

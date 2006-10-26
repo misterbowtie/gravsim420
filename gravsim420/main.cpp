@@ -1,6 +1,6 @@
 #include <irrlicht.h>
-#include <sys/time.h> //matt
-//#include <time.h> //windows
+//#include <sys/time.h> //matt
+ #include <time.h> //windows
 
 using namespace irr;
 
@@ -16,10 +16,10 @@ using namespace gui;
 
 int main()
 {
-    timeval tim;							//Random number seed from current microseconds
-    gettimeofday(&tim, NULL);
-    srand((unsigned int) tim.tv_usec);
-    //srand((unsigned int) time(0));
+ //   timeval tim;							//Random number seed from current microseconds
+ //   gettimeofday(&tim, NULL);
+  //  srand((unsigned int) tim.tv_usec);
+    srand((unsigned int) time(0));
 
     video::E_DRIVER_TYPE driverType;
 
@@ -30,7 +30,7 @@ int main()
 
     char i;
     //std::cin >> i;
-    i='e';
+    i='c';
     switch (i)
     {
     case 'a':
@@ -68,14 +68,14 @@ int main()
 
     ISceneNode* skyBoxNode = 0;
     skyBoxNode = smgr->addSkyBoxSceneNode(
-                     driver->getTexture("media/backstars.bmp"),
-                     driver->getTexture("media/backstars.bmp"),
-                     driver->getTexture("media/backstars.bmp"),
-                     driver->getTexture("media/backstars.bmp"),
-                     driver->getTexture("media/backstars.bmp"),
-                     driver->getTexture("media/backstars.bmp"));
+                     driver->getTexture("media/backstars.jpg"),
+                     driver->getTexture("media/backstars.jpg"),
+                     driver->getTexture("media/backstars.jpg"),
+                     driver->getTexture("media/backstars.jpg"),
+                     driver->getTexture("media/backstars.jpg"),
+                     driver->getTexture("media/backstars.jpg"));
 
-    ICameraSceneNode *cam = smgr->addCameraSceneNode(0, vector3df(0,-200,0), vector3df(0,1,0));
+    ICameraSceneNode *cam = smgr->addCameraSceneNode(0, vector3df(0,-1000,0), vector3df(0,0,0));
     //smgr->addCameraSceneNodeFPS(0, -100.0f, -100.0f);
     //device->getCursorControl()->setVisible(false);
 
@@ -103,7 +103,8 @@ int main()
             //cam->setPosition(vector3df(0,0,0));
             //cam->setTarget((*newsolar.cam).getRotation());
 // //		//cam->setPosition((v-c)*2);
-
+			cam->setPosition(newsolar.getStarPos()-vector3df(300,300,300));
+			cam->setTarget(newsolar.getStarPos());
         }
 
 

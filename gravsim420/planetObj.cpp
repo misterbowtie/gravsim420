@@ -60,7 +60,7 @@ void planetObj::updateView()
     //rotation.rotateYZBy(r[0]);
     //rotation.rotateXZBy(r[1]);
     //rotation.rotateXYBy(r[2]);
-
+	rotation+=rotationSpeed;
     node->setRotation(rotation);  // Annoying until fixed
 
     //translate node...
@@ -115,7 +115,7 @@ planetObj *planetObj::split(float scale)
 
     planetObj *npo = new planetObj(smgr, driver);
 
-    float mscale = scale /mass;
+    float mscale = scale / mass;
     (*npo).mass = mscale * mass;
     mass -= (*npo).mass;
 
@@ -135,8 +135,8 @@ planetObj *planetObj::split(float scale)
     //rd = rd - rotationSpeed*rd.dotProduct(rotationSpeed)/rotation.getLength()*(1.0f +  randf()*.2-.1); // tangent to spining + 10% error
 
     float dist = size+(*npo).size;
-    (*npo).position = position + rd * dist * (1-mscale);
-    position = position - rd * dist * mscale;
+    //(*npo).position = position + rd * dist * (1-mscale);
+    //position = position - rd * dist * mscale;
 
     float display[4];
     if (D){	(rd * dist * (1-mscale)).getAs4Values(display);
@@ -173,15 +173,15 @@ void planetObj::changeAttb()
 
     if (mass>SystemMass*.6f)
     {	//star
-        node->setMaterialTexture( 0, driver->getTexture("media/sun.bmp") );
+        node->setMaterialTexture( 0, driver->getTexture("media/sun.jpg") );
     }
     else if (mass<SystemMass*.05f)
     {	//rock
-        node->setMaterialTexture( 0, driver->getTexture("media/dirt.bmp") );
+        node->setMaterialTexture( 0, driver->getTexture("media/dirt.jpg") );
     }
     else{
         //planet
-        node->setMaterialTexture( 0, driver->getTexture("media/earth.bmp") );
+        node->setMaterialTexture( 0, driver->getTexture("media/earth.jpg") );
     }
 
     node->setScale(vector3df(size,size,size));
