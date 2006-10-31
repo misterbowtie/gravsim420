@@ -28,9 +28,11 @@ public:
     solarSys(ISceneManager *smgrz, IVideoDriver *driverz);
     ~solarSys();
 
-    void updateView();
-    vector3df updatePhysics();
+    void reset();
+	void updateView();
+    void updatePhysics();
     vector3df getStarPos();
+	void optimizeSystem();
 
     std::list<planetObj>::iterator cam;
 
@@ -40,6 +42,9 @@ private:
     std::list<planetObj> poList;
     std::list<planetObj>::iterator p1;
     std::list<planetObj>::iterator p2;
+    double numPieces;
+    double* e;
+	int age;
 
 };
 

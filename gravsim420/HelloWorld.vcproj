@@ -201,6 +201,14 @@
 	</References>
 	<Files>
 		<File
+			RelativePath=".\ARCgenePool.h"
+			>
+		</File>
+		<File
+			RelativePath=".\arcgenes.h"
+			>
+		</File>
+		<File
 			RelativePath="main.cpp"
 			>
 			<FileConfiguration

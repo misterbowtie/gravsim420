@@ -30,7 +30,7 @@ int main()
 
     char i;
     //std::cin >> i;
-    i='c';
+    i='e';
     switch (i)
     {
     case 'a':
@@ -75,12 +75,12 @@ int main()
                      driver->getTexture("media/backstars.jpg"),
                      driver->getTexture("media/backstars.jpg"));
 
-    ICameraSceneNode *cam = smgr->addCameraSceneNode(0, vector3df(0,-1000,0), vector3df(0,0,0));
+    ICameraSceneNode *cam = smgr->addCameraSceneNode(0, vector3df(0,-300,0), vector3df(0,0,0));
     //smgr->addCameraSceneNodeFPS(0, -100.0f, -100.0f);
     //device->getCursorControl()->setVisible(false);
 
     solarSys newsolar(smgr, driver);
-
+	
     while (device->run())
     {
         while (1)
@@ -94,7 +94,7 @@ int main()
             //if last physicsupdate was more than X millisec ago then
             for (int j=0;j<UpdatesPerFrame;j++)
             {
-                c = newsolar.updatePhysics();  // we could call a move function for the world x amount of times before doing a physics update to allow
+                newsolar.updatePhysics();  // we could call a move function for the world x amount of times before doing a physics update to allow
             }					// more objects on screen possibly...  same with adjusting the fps vs physics updates
             // though the current bottle necks might just be on my cpu  also adjusting t
 
@@ -103,8 +103,8 @@ int main()
             //cam->setPosition(vector3df(0,0,0));
             //cam->setTarget((*newsolar.cam).getRotation());
 // //		//cam->setPosition((v-c)*2);
-			cam->setPosition(newsolar.getStarPos()-vector3df(300,300,300));
-			cam->setTarget(newsolar.getStarPos());
+			//cam->setPosition(newsolar.getStarPos()-vector3df(100,100,100));
+			//cam->setTarget(newsolar.getStarPos());
         }
 
 

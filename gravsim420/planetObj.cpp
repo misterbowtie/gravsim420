@@ -44,7 +44,7 @@ planetObj::~planetObj()
 
 void planetObj::report()
 {
-    if (D)cout << "\n M: " << mass << " S: " << volume << " V: " << velocity.getLength() << " P: " << position.getLength();
+    cout << "\n M: " << mass << " S: " << volume << " V: " << velocity.getLength() << " P: " << position.getLength();
 }
 
 void planetObj::updateView()
@@ -54,13 +54,7 @@ void planetObj::updateView()
     //center
     node->setPosition(vector3df(0,0,0));
 
-    //float[] r = rotationSpeed.getAs4Values();
-
-    //irrlict rotation
-    //rotation.rotateYZBy(r[0]);
-    //rotation.rotateXZBy(r[1]);
-    //rotation.rotateXYBy(r[2]);
-	rotation+=rotationSpeed;
+    rotation+=rotationSpeed;
     node->setRotation(rotation);  // Annoying until fixed
 
     //translate node...
@@ -109,13 +103,13 @@ void planetObj::move()
     force.set(0,0,0);
 }
 
-planetObj *planetObj::split(float scale)
+planetObj *planetObj::split(float scale, double e[])
 {
     if (D){cout<<"\nSplit before: ";report();}
 
     planetObj *npo = new planetObj(smgr, driver);
 
-    float mscale = scale / mass;
+    float mscale = scale / mass * (1.0f +  randf()*.2-.1); // 10% error
     (*npo).mass = mscale * mass;
     mass -= (*npo).mass;
 
@@ -129,24 +123,24 @@ planetObj *planetObj::split(float scale)
     (*npo).velocity = velocity;
 
     // make displacement vector
-    vector3df rd;
-    rd.set(randf()-.5, randf()-.5, randf()-.5);
-    rd.setLength(1.5f);
-    //rd = rd - rotationSpeed*rd.dotProduct(rotationSpeed)/rotation.getLength()*(1.0f +  randf()*.2-.1); // tangent to spining + 10% error
-
+    vector3df offset;
+    offset.set(randf()-.5, randf()-.5, randf()-.5);
+    offset.setLength(1.1);
+    
     float dist = size+(*npo).size;
-    //(*npo).position = position + rd * dist * (1-mscale);
-    //position = position - rd * dist * mscale;
+    (*npo).position = position + offset * dist * (1-mscale);
+    position = position - offset * dist * mscale;
 
     float display[4];
-    if (D){	(rd * dist * (1-mscale)).getAs4Values(display);
+    if (D){	(offset * dist * (1-mscale)).getAs4Values(display);
         cout<<"\n offset: "<<display[0]<<","<<display[1]<<","<<display[2];
     }
 
-    rd = rd.crossProduct(rotationSpeed); // tangent, direction to travel
-    rd.setLength(Explosion);
-    (*npo).force = force + rd;
-    force = force - rd;
+	vector3df tangent = offset.crossProduct(rotationSpeed); // tangent, direction to travel
+	tangent.setLength(e[0]+e[1]*mass);
+	offset.setLength(e[2]+e[3]*mass);
+    (*npo).force = force + offset + tangent;
+    force = force - offset - tangent;
 
     if (D){	force.getAs4Values(display);
         cout<<"\n force: "<<display[0]<<","<<display[1]<<","<<display[2];
