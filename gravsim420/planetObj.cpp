@@ -8,14 +8,6 @@
 
 using namespace std;
 
-/*planetObj::planetObj(ISceneManager *smgrz, IVideoDriver* driverz)
-{
-    vector3df zero(0,0,0);
-	planetObj(smgrz, driverz, zero, zero, zero, zero, SystemMass, SystemMass);
-
-	if(node) cout<<"NODE CREATED";
-}*/
-
 planetObj::planetObj(ISceneManager *smgrz, IVideoDriver* driverz, vector3df p = vector3df(0,0,0), vector3df v = vector3df(0,0,0), vector3df r = vector3df(0,1,0), float m = SystemMass, float s=SystemMass)
 {
     smgr = smgrz;
@@ -37,7 +29,6 @@ planetObj::planetObj(ISceneManager *smgrz, IVideoDriver* driverz, vector3df p = 
 
 planetObj::~planetObj()
 {
-//remove from smgr
     node->remove();
     if (D){cout<<"\nDELETE PLANET.";report();}
 }
@@ -45,22 +36,6 @@ planetObj::~planetObj()
 void planetObj::report()
 {
     cout << "\n M: " << mass << " S: " << volume << " V: " << velocity.getLength() << " P: " << position.getLength();
-}
-
-void planetObj::updateView()
-{
-    if (!node) cout<<"Oh shit";
-
-    //center
-    node->setPosition(vector3df(0,0,0));
-
-    rotation-=rotationSpeed/size;
-    node->setRotation(rotation);  // Annoying until fixed
-
-    //translate node...
-    node->setPosition(position);
-
-
 }
 
 void planetObj::join(planetObj *p2)
@@ -96,11 +71,17 @@ void planetObj::addForce(vector3df f)
 
 void planetObj::move()
 {
-    vector3df a;
     a = force / mass;
     velocity += a * t;
     position += velocity * t;
     force.set(0,0,0);
+
+	node->setPosition(vector3df(0,0,0));
+
+    rotation-=rotationSpeed/size;
+    node->setRotation(rotation);
+
+    node->setPosition(position);
 }
 
 planetObj *planetObj::split(float scale)

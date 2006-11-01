@@ -25,7 +25,6 @@ class planetObj
 public:
     planetObj(ISceneManager *smgrz, IVideoDriver* driverz, vector3df p, vector3df v, vector3df r, float m, float s);
     ~planetObj();
-    void updateView();
     void join(planetObj *p2);
     void addForce(vector3df f);
     void move();
@@ -66,7 +65,7 @@ private:
     float mass;
     float volume;
     float size;
-    //LightSource ls;
+	vector3df a;
 };
 
 #include "planetObj.cpp"

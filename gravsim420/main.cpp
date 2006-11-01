@@ -1,6 +1,6 @@
 #include <irrlicht.h>
-//#include <sys/time.h> //matt
- #include <time.h> //windows
+//#include <sys/time.h>		//Linux
+ #include <time.h>			//Windows
 
 using namespace irr;
 
@@ -16,9 +16,9 @@ using namespace gui;
 
 int main()
 {
- //   timeval tim;							//Random number seed from current microseconds
- //   gettimeofday(&tim, NULL);
-  //  srand((unsigned int) tim.tv_usec);
+	//timeval tim;
+	//gettimeofday(&tim, NULL);
+	//srand((unsigned int) tim.tv_usec);
     srand((unsigned int) time(0));
 
     video::E_DRIVER_TYPE driverType;
@@ -30,7 +30,7 @@ int main()
 
     char i;
     //std::cin >> i;
-    i='a';
+    i='b';
     switch (i)
     {
     case 'a':
@@ -49,13 +49,11 @@ int main()
         return 1;
     }
 
-    // create device and exit if creation failed
-
     IrrlichtDevice *device =
         createDevice(driverType, core::dimension2d<s32>(640, 480));
 
     if (device == 0)
-        return 1; // could not create selected driver.
+        return 1;
 
     device->setWindowCaption(L"GravSim");
 
@@ -87,31 +85,23 @@ int main()
     {
 		while(1)
 		{
-			
-            driver->beginScene(true, true, SColor(0, 0, 0, 0));
+			driver->beginScene(true, true, SColor(0, 0, 0, 0));
             smgr->drawAll();
             guienv->drawAll();
             driver->endScene();
 
-            vector3df c;
-            //if last physicsupdate was more than X millisec ago then
             for (int j=0;j<UpdatesPerFrame;j++)
             {
-                newsolar.updatePhysics();  // we could call a move function for the world x amount of times before doing a physics update to allow
-            }					// more objects on screen possibly...  same with adjusting the fps vs physics updates
-            // though the current bottle necks might just be on my cpu  also adjusting t
+                newsolar.updatePhysics();
+            }
 
-            newsolar.updateView();
-            vector3df v = (*newsolar.cam).getPosition();
-            cam->setPosition(vector3df(100,0,0));
-            cam->setTarget(v);//(*newsolar.cam).getRotation());
-// //		//cam->setPosition((v-c)*2);
-			//cam->setPosition(newsolar.getStarPos()-vector3df(100,100,100));
-			//cam->setTarget(newsolar.getStarPos());
+            //vector3df v = (*newsolar.cam).getPosition();
+            //cam->setPosition(vector3df(300,0,0));
+            //cam->setTarget(v);
+
+			cam->setPosition(newsolar.getStarPos()-vector3df(75,75,75));
+		    cam->setTarget(newsolar.getStarPos());
         }
-
-
-
     }
 
     device->drop();

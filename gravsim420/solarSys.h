@@ -30,7 +30,6 @@ public:
     ~solarSys();
 
     void reset();
-	void updateView();
     void updatePhysics();
     vector3df getStarPos();
 	void optimizeSystem();
@@ -45,6 +44,10 @@ private:
     std::list<planetObj>::iterator p2;
     int age;
 	double sumDist;
+	int poSize;
+	vector3df r;
+	float dist;
+	vector3df force;
 };
 
 #include "solarSys.cpp"
