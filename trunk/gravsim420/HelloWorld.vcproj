@@ -209,6 +209,10 @@
 			>
 		</File>
 		<File
+			RelativePath=".\const.h"
+			>
+		</File>
+		<File
 			RelativePath="main.cpp"
 			>
 			<FileConfiguration
@@ -232,6 +236,10 @@
 					PreprocessorDefinitions=""
 				/>
 			</FileConfiguration>
+		</File>
+		<File
+			RelativePath=".\solarSys.h"
+			>
 		</File>
 	</Files>
 	<Globals>
