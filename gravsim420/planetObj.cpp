@@ -103,7 +103,7 @@ void planetObj::move()
     force.set(0,0,0);
 }
 
-planetObj *planetObj::split(float scale, double e[])
+planetObj *planetObj::split(float scale)
 {
     if (D){cout<<"\nSplit before: ";report();}
 
@@ -125,7 +125,7 @@ planetObj *planetObj::split(float scale, double e[])
     // make displacement vector
     vector3df offset;
     offset.set(randf()-.5, randf()-.5, randf()-.5);
-    offset.setLength(1.1);
+    offset.setLength(1.5);
     
     float dist = size+(*npo).size;
     (*npo).position = position + offset * dist * (1-mscale);
@@ -137,8 +137,8 @@ planetObj *planetObj::split(float scale, double e[])
     }
 
 	vector3df tangent = offset.crossProduct(rotationSpeed); // tangent, direction to travel
-	tangent.setLength(e[0]+e[1]*mass);
-	offset.setLength(e[2]+e[3]*mass);
+	tangent.setLength(TFORCE);
+	offset.setLength(OFORCE);
     (*npo).force = force + offset + tangent;
     force = force - offset - tangent;
 

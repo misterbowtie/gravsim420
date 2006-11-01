@@ -30,7 +30,7 @@ int main()
 
     char i;
     //std::cin >> i;
-    i='e';
+    i='a';
     switch (i)
     {
     case 'a':
@@ -83,8 +83,9 @@ int main()
 	
     while (device->run())
     {
-        while (1)
-        {
+		while(1)
+		{
+			
             driver->beginScene(true, true, SColor(0, 0, 0, 0));
             smgr->drawAll();
             guienv->drawAll();
@@ -100,8 +101,8 @@ int main()
 
             newsolar.updateView();
             vector3df v = (*newsolar.cam).getPosition();
-            //cam->setPosition(vector3df(0,0,0));
-            //cam->setTarget((*newsolar.cam).getRotation());
+            cam->setPosition(vector3df(100,0,0));
+            cam->setTarget(v);//(*newsolar.cam).getRotation());
 // //		//cam->setPosition((v-c)*2);
 			//cam->setPosition(newsolar.getStarPos()-vector3df(100,100,100));
 			//cam->setTarget(newsolar.getStarPos());
