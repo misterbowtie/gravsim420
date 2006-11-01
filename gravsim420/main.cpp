@@ -75,6 +75,8 @@ int main()
                      driver->getTexture("media/backstars.jpg"),
                      driver->getTexture("media/backstars.jpg"));
 
+	driver->setAmbientLight(video::SColor(0,60,60,60));
+	
     ICameraSceneNode *cam = smgr->addCameraSceneNode(0, vector3df(0,-300,0), vector3df(0,0,0));
     //smgr->addCameraSceneNodeFPS(0, -100.0f, -100.0f);
     //device->getCursorControl()->setVisible(false);
