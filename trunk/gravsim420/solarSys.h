@@ -22,6 +22,7 @@ using namespace gui;
 
 #pragma comment(lib, "Irrlicht.lib")
 
+
 class solarSys
 {
 public:
@@ -42,10 +43,8 @@ private:
     std::list<planetObj> poList;
     std::list<planetObj>::iterator p1;
     std::list<planetObj>::iterator p2;
-    double numPieces;
-    double* e;
-	int age;
-
+    int age;
+	double sumDist;
 };
 
 #include "solarSys.cpp"

@@ -18,14 +18,7 @@ solarSys::solarSys(ISceneManager *smgrz, IVideoDriver *driverz)
 
 	reset();
 
-	e = new double[4];
-	e[0]= 412;
-	e[1]= .05;
-	e[2]= 1;
-	e[3]= 9.09;
-	numPieces=40;
-
-	//optimizeSystem();
+	if(OPT) optimizeSystem();
 	
 	cam = poList.begin();
     if (D)cout<<"\nSolar System Initialized";
@@ -56,6 +49,7 @@ void solarSys::updateView()
 void solarSys::updatePhysics()
 {
     age++;
+	sumDist=0;
 	int poSize = poList.size();
     if (D)cout << "\nUpdate Physics";
     for (p1 = poList.begin(); p1 != poList.end(); p1++)
@@ -80,7 +74,7 @@ void solarSys::updatePhysics()
 			
 			vector3df r = (*p2).getPosition() - (*p1).getPosition();
 			float dist = r.getLength();
-
+			sumDist+=dist;
 			// merge touching planets
             if ((dist < (*p1).getSize()+(*p2).getSize()))  //Could this be dist < p1.size+p2.size ?
             {
@@ -107,10 +101,10 @@ void solarSys::updatePhysics()
     {
         //cout<<"\nenergy: "<<e1<<" "<<e2;
 		p1 = poList.begin();
-        float m = (*p1).getMass()/numPieces/2;
-		while((*p1).getMass()>SystemMass/2)
+        float m = (*p1).getMass()/numPieces;
+		while((*p1).getMass()>(SystemMass* StarSize))
         {
-            poList.push_back((*(*p1).split(m,e)));
+            poList.push_back((*(*p1).split(m)));
             //THIS JUST SEEMS WRONG!
         }
         if (D) cout << "\nBIG BANG!!!!!";
@@ -136,23 +130,32 @@ vector3df solarSys::getStarPos()
 
 void solarSys::optimizeSystem()
 {
-	double *param[] = {&e[0],&e[1],&e[2],&e[3]};
-	genePool gp(10,param,4);
+	double *param[] = {&ev[0],&ev[1],&ev[2]};
+	genePool gp(20,param,3);
 
-	gp.print();
-
+	int score=0;
+	
 	int count=0;
 	reset();
 	while(1)
 	{	
 		updatePhysics();
-		if (poList.size() < 4)
+		if (poList.size() < goalNumPlanets)
 		{
-			gp.score(age);
-			gp.nextTest();
+			score = age-sumDist/poList.size()/poList.size();
+			gp.score(score);
+			
+			if(age>5000000)
+			{
+				//gp.setBest();
+				gp.print();
+				reset();
+				return;
+			}
 			reset();
+			
+			gp.nextTest();
 		}
-		
 	}
 }
 

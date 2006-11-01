@@ -31,7 +31,7 @@ public:
     void move();
     void report();
     void changeAttb();
-    planetObj *split(float scale, double e[]);
+    planetObj *split(float scale);
 
     vector3df getRotation();
     vector3df getPosition();

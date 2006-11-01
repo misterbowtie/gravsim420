@@ -60,6 +60,13 @@ public:
 
 		
 	}
+	void setBest()
+	{
+		for(int i=0;i<size; i++)
+		{
+			*(var[i]) = best.get(i);
+		}
+	}
 	
 	void printBest()
 	{
