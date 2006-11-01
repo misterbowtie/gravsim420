@@ -2,7 +2,7 @@
 #define CONST_H
 
 #define t 0.01f  //Physics time step
-#define UpdatesPerFrame 50
+#define UpdatesPerFrame 5
 #define G .8 // Gravity Const
 #define D 0    // Debug
 #define SystemMass 1000 // Net mass of system

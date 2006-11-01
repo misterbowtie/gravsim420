@@ -65,11 +65,10 @@ void solarSys::updatePhysics()
 			}
 
             // remove distance planets
-			if((*p2).getPosition().getLength()>500)
+			if((*p2).getPosition().getLength()>400)
 			{	p2 = poList.erase(p2);
-				reset();
-				return;
-				//continue;
+				if(OPT){reset();return;}
+				continue;
 			}
 			
 			vector3df r = (*p2).getPosition() - (*p1).getPosition();

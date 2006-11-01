@@ -54,7 +54,7 @@ void planetObj::updateView()
     //center
     node->setPosition(vector3df(0,0,0));
 
-    rotation+=rotationSpeed;
+    rotation-=rotationSpeed/size;
     node->setRotation(rotation);  // Annoying until fixed
 
     //translate node...
@@ -109,11 +109,11 @@ planetObj *planetObj::split(float scale)
 
     planetObj *npo = new planetObj(smgr, driver);
 
-    float mscale = scale / mass * (1.0f +  randf()*.2-.1); // 10% error
+    float mscale = scale / mass * (1.0f +  randf()*.2-.1); // +/-10% error
     (*npo).mass = mscale * mass;
     mass -= (*npo).mass;
 
-    float sscale = mscale ;//* (1.0f +  randf()*.2-.1); // 10% error
+    float sscale = mscale *(1.0f +  randf()*.4-.2); // +/-20% error
     (*npo).volume = volume * sscale;
     volume -= (*npo).volume;
 
@@ -165,20 +165,41 @@ void planetObj::changeAttb()
 
     node->setMaterialFlag(EMF_LIGHTING, false);
 
-    if (mass>SystemMass*.6f)
+    if (mass>SystemMass*.1f)
     {	//star
         node->setMaterialTexture( 0, driver->getTexture("media/sun.jpg") );
+		smgr->addLightSceneNode(node);
+		node->setMaterialFlag(video::EMF_LIGHTING, false);
     }
-    else if (mass<SystemMass*.05f)
-    {	//rock
-        node->setMaterialTexture( 0, driver->getTexture("media/dirt.jpg") );
-    }
-    else{
-        //planet
-        node->setMaterialTexture( 0, driver->getTexture("media/earth.jpg") );
-    }
-
-    node->setScale(vector3df(size,size,size));
+    else 
+	{
+		if (mass/volume > 1.2)
+		{	//rock
+			node->setMaterialTexture( 0, driver->getTexture("media/dirt.jpg") );
+		}
+		else if(mass/volume > 1)
+		{
+			//redrock
+			node->setMaterialTexture( 0, driver->getTexture("media/redrock.jpg") );
+		}
+		else if(mass/volume > 1)
+		{
+			//ice
+			node->setMaterialTexture( 0, driver->getTexture("media/ice.jpg") );
+		}
+		else if(mass/volume > .9)
+		{
+			//planet
+			node->setMaterialTexture( 0, driver->getTexture("media/earth.jpg") );
+		}
+		else{
+			//gas
+			node->setMaterialTexture( 0, driver->getTexture("media/gas.jpg") );
+		}
+		node->setMaterialFlag(video::EMF_LIGHTING, true);
+		//node->addShadowVolumeSceneNode();
+	}
+	node->setScale(vector3df(size,size,size));
 
 }
 
