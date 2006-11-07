@@ -18,8 +18,6 @@ solarSys::solarSys(ISceneManager *smgrz, IVideoDriver *driverz)
 
 	reset();
 
-	if(OPT) optimizeSystem();
-	
 	cam = poList.begin();
 }
 
@@ -28,6 +26,7 @@ solarSys::~solarSys()
 }
 void solarSys::reset()
 {
+	G=.37;
 	age=0;
 	poList.clear();
 	planetObj *npo = new planetObj(smgr, driver);
@@ -37,7 +36,7 @@ void solarSys::reset()
 void solarSys::updatePhysics()
 {
     age++;
-	sumDist=0;
+//	sumDist=0;
 	poSize = poList.size();
     for (p1 = poList.begin(); p1 != poList.end(); p1++)
     {
@@ -45,23 +44,16 @@ void solarSys::updatePhysics()
         p2++;
         for (; p2 != poList.end();)
         {
-/*
-			if((*p2).getPosition().getLength()>400)
-			{	p2 = poList.erase(p2);
-				if(OPT){reset();return;}
-				continue;
-			}
-*/			
 			r = (*p2).getPosition() - (*p1).getPosition();
 			dist = r.getLength();
-			sumDist += dist;
+//			sumDist += dist;
             if ((dist < (*p1).getSize()+(*p2).getSize()))
             {
                 (*p1).join(&(*p2));
                 p2 = poList.erase(p2);
             	continue;
 			}
-			else
+			else // apply forces
 			{
 				force = r.normalize() * G * (*p1).getMass() * (*p2).getMass() / (pow(dist,2));
 				(*p1).addForce(force);
@@ -71,11 +63,21 @@ void solarSys::updatePhysics()
 		}
     }
 
-    for (p1 = poList.begin(); p1 != poList.end(); p1++)
-    {
-        (*p1).move();
+
+    for (p1 = poList.begin(); p1 != poList.end();)
+    {	// delete distant planets
+		if((*p1).getPosition().getLength()>700)
+		{	p1 = poList.erase(p1);
+			continue;
+		}
+		else // move planets
+		{
+			(*p1).move();
+			 p1++;
+		}
     }
 
+	// big bang
     if (poList.size() < 2)
     {
 		p1 = poList.begin();
@@ -104,37 +106,6 @@ void solarSys::updatePhysics()
 vector3df solarSys::getStarPos()
 {
     return (*poList.begin()).getPosition();
-}
-
-void solarSys::optimizeSystem()
-{
-	double *param[] = {&ev[0],&ev[1],&ev[2]};
-	genePool gp(20,param,3);
-
-	int score=0;
-	
-	int count=0;
-	reset();
-	while(1)
-	{	
-		updatePhysics();
-		if (poList.size() < goalNumPlanets)
-		{
-			score = age-sumDist/poList.size()/poList.size();
-			gp.score(score);
-			
-			if(age>5000000)
-			{
-				//gp.setBest();
-				gp.print();
-				reset();
-				return;
-			}
-			reset();
-			
-			gp.nextTest();
-		}
-	}
 }
 
 #endif

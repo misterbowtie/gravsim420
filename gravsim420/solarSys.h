@@ -32,7 +32,6 @@ public:
     void reset();
     void updatePhysics();
     vector3df getStarPos();
-	void optimizeSystem();
 
     std::list<planetObj>::iterator cam;
 

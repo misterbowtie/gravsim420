@@ -292,14 +292,6 @@
 	</References>
 	<Files>
 		<File
-			RelativePath=".\ARCgenePool.h"
-			>
-		</File>
-		<File
-			RelativePath=".\arcgenes.h"
-			>
-		</File>
-		<File
 			RelativePath=".\const.h"
 			>
 		</File>

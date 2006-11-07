@@ -178,7 +178,7 @@ void planetObj::changeAttb()
 			node->setMaterialTexture( 0, driver->getTexture("media/gas.jpg") );
 		}
 		node->setMaterialFlag(video::EMF_LIGHTING, true);
-		//node->addShadowVolumeSceneNode();
+		node->addShadowVolumeSceneNode();
 	}
 	node->setScale(vector3df(size,size,size));
 
