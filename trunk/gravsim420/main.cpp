@@ -30,7 +30,7 @@ int main()
 
     char i;
     //std::cin >> i;
-    i='b';
+    i='c';
     switch (i)
     {
     case 'a':
@@ -80,11 +80,14 @@ int main()
     //device->getCursorControl()->setVisible(false);
 
     solarSys newsolar(smgr, driver);
-	
+	time_t timer;
+	time(&timer);
     while (device->run())
     {
 		while(1)
 		{
+			//while(difftime(timer,time(0)) > 1.0/FramesPerSecond);
+			time(&timer);
 			driver->beginScene(true, true, SColor(0, 0, 0, 0));
             smgr->drawAll();
             guienv->drawAll();
