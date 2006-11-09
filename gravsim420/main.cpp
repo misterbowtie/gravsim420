@@ -30,8 +30,10 @@ int main()
 
     char i;
     //std::cin >> i;
-    i='c';
-    switch (i)
+    
+	i='d';
+    if(OPT) i='f';
+	switch (i)
     {
     case 'a':
         driverType = video::EDT_DIRECT3D9;break;
@@ -75,19 +77,16 @@ int main()
 
 	driver->setAmbientLight(video::SColor(0,60,60,60));
 	
-    ICameraSceneNode *cam = smgr->addCameraSceneNode(0, vector3df(0,-300,0), vector3df(0,0,0));
+    ICameraSceneNode *cam = smgr->addCameraSceneNode(0, vector3df(0,-200,0), vector3df(0,0,0));
     //smgr->addCameraSceneNodeFPS(0, -100.0f, -100.0f);
     //device->getCursorControl()->setVisible(false);
 
     solarSys newsolar(smgr, driver);
-	time_t timer;
-	time(&timer);
-    while (device->run())
+	 while (device->run())
     {
 		while(1)
 		{
-			//while(difftime(timer,time(0)) > 1.0/FramesPerSecond);
-			time(&timer);
+			while(driver->getFPS() > 30);
 			driver->beginScene(true, true, SColor(0, 0, 0, 0));
             smgr->drawAll();
             guienv->drawAll();
@@ -98,11 +97,11 @@ int main()
                 newsolar.updatePhysics();
             }
 
-            //vector3df v = (*newsolar.cam).getPosition();
-            //cam->setPosition(vector3df(300,0,0));
+            vector3df v = (*newsolar.cam).getPosition();
+            cam->setPosition(v);
             //cam->setTarget(v);
 
-			cam->setPosition(newsolar.getStarPos()-vector3df(75,75,75));
+			//cam->setPosition(newsolar.getStarPos()-vector3df(75,75,75));
 		    cam->setTarget(newsolar.getStarPos());
         }
     }

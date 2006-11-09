@@ -4,7 +4,7 @@
 #include <iostream>
 
 #define MUTATION  .30
-#define CROSSOVER  .10  
+#define CROSSOVER  .50  
 
 //double randf(){ return ((double)rand())/(RAND_MAX+1);}
 
@@ -78,13 +78,13 @@ void genes::make(genes & father, genes &mother)
 		{	if(randf() < .40) // 40% CHANCE
 				data[i]= mother.data[i];
 			else if(randf() < .33) // 60%*33% = 20% chance
-				data[i]= (data[i] + mother.data[i]/2);
+				data[i]= (data[i] + mother.data[i])/2;
 		}
 
 //MUTATE
-	//for(int i=0; i<gsize*MUTATION; i++)
-	else{
-		int r = randf()*gsize;
-        data[r]+= data[r]*(randf()+randf()-1)/2;
+	//if(randf()<MUTATION)
+	else
+	{	int r = randf()*gsize;
+		data[r]+= data[r]*(randf()+randf()-1);
 	}
 }

@@ -8,7 +8,7 @@
 
 using namespace std;
 
-planetObj::planetObj(ISceneManager *smgrz, IVideoDriver* driverz, vector3df p = vector3df(0,0,0), vector3df v = vector3df(0,0,0), vector3df r = vector3df(0,1,0), float m = SystemMass, float s=SystemMass)
+planetObj::planetObj(ISceneManager *smgrz, IVideoDriver* driverz, vector3df p = vector3df(0,0,0), vector3df v = vector3df(0,0,0), vector3df r = vector3df(0,ROT,0), float m = SystemMass, float s=SystemMass)
 {
     smgr = smgrz;
     driver = driverz;
@@ -84,60 +84,58 @@ void planetObj::move()
     node->setPosition(position);
 }
 
-planetObj *planetObj::split(float scale)
+void planetObj::explode(std::list<planetObj> &poList)
 {
-    if (D){cout<<"\nSplit before: ";report();}
+    if (D){cout<<"\nExplode before: ";report();}
+	
+	std::list<planetObj>::iterator p1 = poList.end();
+	vector3df centerG;
 
-    planetObj *npo = new planetObj(smgr, driver);
+	for(int p=0; p<numPieces; p++)
+	{	
+		planetObj *npo = new planetObj(smgr, driver);
 
-    float mscale = scale / mass * (1.0f +  randf()*.2-.1); // +/-10% error
-    (*npo).mass = mscale * mass;
-    mass -= (*npo).mass;
+		float mscale = 1/numPieces;// * (1.0f +  randf()*.2-.1); // +/-10% error
+		(*npo).mass = mscale * mass;
+	    
+		float sscale = mscale*(1.0f +  randf()*.4-.2); // +/-20% error
+		(*npo).volume = volume * sscale;
+	    
+		(*npo).changeAttb();
 
-    float sscale = mscale *(1.0f +  randf()*.4-.2); // +/-20% error
-    (*npo).volume = volume * sscale;
-    volume -= (*npo).volume;
+		// make displacement vector
+		vector3df offset;
+		if(randf()<.8)
+			offset.set(randf()-.5, randf()-.5, randf()-.5);
+		else
+			offset = -centerG;
+		offset.setLength((.5+randf()*1.5)* size);
 
-    changeAttb();
-    (*npo).changeAttb();
+		centerG+=offset;
 
-    (*npo).velocity = velocity;
+		// displace radius of orignal size
+		(*npo).position = position + offset;
 
-    // make displacement vector
-    vector3df offset;
-    offset.set(randf()-.5, randf()-.5, randf()-.5);
-    offset.setLength(1.5);
-    
-    float dist = size+(*npo).size;
-    (*npo).position = position + offset * dist * (1-mscale);
-    position = position - offset * dist * mscale;
+		// retain rotaional velocity, but linear
+		(*npo).velocity = velocity + offset*OFORCE + offset.crossProduct(rotationSpeed);
 
-    float display[4];
-    if (D){	(offset * dist * (1-mscale)).getAs4Values(display);
-        cout<<"\n offset: "<<display[0]<<","<<display[1]<<","<<display[2];
-    }
+		/*float display[4];
+		if (D){	(offset * dist * (1-mscale)).getAs4Values(display);
+			cout<<"\n offset: "<<display[0]<<","<<display[1]<<","<<display[2];
+		}*/
+		force -= (*npo).velocity/t;
 
-	vector3df tangent = offset.crossProduct(rotationSpeed); // tangent, direction to travel
-	tangent.setLength(TFORCE);
-	offset.setLength(OFORCE);
-    (*npo).force = force + offset + tangent;
-    force = force - offset - tangent;
+		poList.push_back(*npo);
+	}
 
-    if (D){	force.getAs4Values(display);
-        cout<<"\n force: "<<display[0]<<","<<display[1]<<","<<display[2];
-    }
+	force/=numPieces;
 
-    (*npo).move();
-    move();
+	//cout<<"\n sum of forces= "<<force.getLength();
 
-    if (D)
-    {
-        cout << "\n after split";
-        report();
-        (*npo).report();
-    }
-
-    return npo;
+	/*for (; p1 != poList.end(); p1++)
+    {	(*p1).addForce(force);
+		(*p1).move();
+	}*/
 }
 
 void planetObj::changeAttb()
@@ -183,7 +181,6 @@ void planetObj::changeAttb()
 	node->setScale(vector3df(size,size,size));
 
 }
-
 vector3df planetObj::getRotation(){ return rotation;}
 vector3df planetObj::getPosition(){ return position;}
 vector3df planetObj::getVelocity(){ return velocity;}

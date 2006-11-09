@@ -9,7 +9,7 @@ using namespace std;
 
 
 
-float SURVIVAL_RATE = .80f; 
+float SURVIVAL_RATE = .50f; 
 
 int geneCompare(const void * a, const void * b)
 {	if(*(genes*)a<*(genes*)b)
@@ -21,8 +21,7 @@ class genePool
 {
 public:
 	genePool(int poolSize, double *variables[], int geneSize)
-	{	time_t seconds; time(&seconds); 
-		srand((unsigned int) seconds); 
+	{	srand((unsigned int) time(0)); 
 		
 		max=poolSize;
 		size=geneSize;
@@ -36,8 +35,9 @@ public:
 		original.init(size,par);
 		
 		gs = new genes[max];
-		for(int i=0; i<max; i++)
-			gs[i].make(original,original);
+		gs[0].make(original,original);
+		for(int i=1; i<max; i++)
+			gs[i].make(gs[i-1],original);
 
 		delete[] par;
 		index=0;
@@ -114,7 +114,7 @@ void genePool::repopulate()
 	for(int i=0; i<max; i++)
 	{
 		father= i*SURVIVAL_RATE;
-		mother= randf()*randf()*max;
+		mother= randf()*randf()*max*SURVIVAL_RATE;
 		gs[i].make(oldgs[father],oldgs[mother]);
 	}
 	if(best.getFit()<oldgs[0].getFit())
