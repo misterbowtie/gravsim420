@@ -18,6 +18,8 @@ solarSys::solarSys(ISceneManager *smgrz, IVideoDriver *driverz)
 
 	reset();
 
+	if(OPT) optimizeSystem();
+
 	cam = poList.begin();
 }
 
@@ -26,7 +28,7 @@ solarSys::~solarSys()
 }
 void solarSys::reset()
 {
-	G=.37;
+	//G=.37;
 	age=0;
 	poList.clear();
 	planetObj *npo = new planetObj(smgr, driver);
@@ -36,6 +38,7 @@ void solarSys::reset()
 void solarSys::updatePhysics()
 {
     age++;
+	cam = ++poList.begin();
 //	sumDist=0;
 	poSize = poList.size();
     for (p1 = poList.begin(); p1 != poList.end(); p1++)
@@ -47,7 +50,7 @@ void solarSys::updatePhysics()
 			r = (*p2).getPosition() - (*p1).getPosition();
 			dist = r.getLength();
 //			sumDist += dist;
-            if ((dist < (*p1).getSize()+(*p2).getSize()))
+			if ((dist < (*p1).getSize()+(*p2).getSize()))
             {
                 (*p1).join(&(*p2));
                 p2 = poList.erase(p2);
@@ -66,7 +69,7 @@ void solarSys::updatePhysics()
 
     for (p1 = poList.begin(); p1 != poList.end();)
     {	// delete distant planets
-		if((*p1).getPosition().getLength()>700)
+		if((*p1).getPosition().getLength()>800)
 		{	p1 = poList.erase(p1);
 			continue;
 		}
@@ -80,32 +83,72 @@ void solarSys::updatePhysics()
 	// big bang
     if (poList.size() < 2)
     {
+		reset();
+		//printList();
+		//cout<<"\nBig Bang\n-------------";
 		p1 = poList.begin();
-        float m = (*p1).getMass()/numPieces;
-		while((*p1).getMass()>(SystemMass* StarSize))
-        {
-            poList.push_back((*(*p1).split(m)));
-        }
+        (*p1).explode(poList);
+		poList.erase(p1);
+		//printList();
     }
 
-/*
+
     if (poSize!=poList.size())
 	{
-		if (D)
-		{
-			cout<<"\nPLANET LIST: " << poList.size();
-			for (p1 = poList.begin(); p1 != poList.end(); p1++)
-				(*p1).report();
-			cout<<"\n-----------";
-		}
-    }
-*/
-
+		if(!OPT) poList.sort();
+		if(D) printList();
+	}
+	
 }
 
 vector3df solarSys::getStarPos()
 {
     return (*poList.begin()).getPosition();
 }
+
+void solarSys::printList()
+{
+	cout<<"\nPLANET LIST: " << poList.size();
+	for (p1 = poList.begin(); p1 != poList.end(); p1++)
+		(*p1).report();
+	cout<<"\n-----------";
+}
+
+void solarSys::optimizeSystem()
+{
+	double *param[] = {&ROT,&OFORCE};
+	genePool gp(30,param,sizeof(param)/sizeof(param[0]));
+
+	double score=0;
+	int goalNumPlanets=110;
+	int maxage = 50000;
+	int count=0;
+	reset();
+	time_t start;
+	time(&start);
+	cout<<"\nOptimizing Varibles";
+	while(1)
+	{	
+		updatePhysics();
+		if (poList.size() < goalNumPlanets || (time(0) - start)>60)
+		{
+			//score = age*age;
+			gp.score(age);
+			
+			if(age>maxage)
+			{
+				if(goalNumPlanets<15)
+					goalNumPlanets++;
+				maxage=age;
+			}
+			reset();
+			time(&start);
+			cout<<goalNumPlanets;
+			gp.nextTest();
+		}
+	}
+}
+
+
 
 #endif

@@ -4,6 +4,8 @@
 #include <iostream>
 #include <math.h>
 #include "const.h"
+#include <list>
+#include <iterator>
 
 #include <irrlicht.h>
 
@@ -30,7 +32,7 @@ public:
     void move();
     void report();
     void changeAttb();
-    planetObj *split(float scale);
+    void explode(std::list<planetObj> &poList);
 
     vector3df getRotation();
     vector3df getPosition();
@@ -39,6 +41,7 @@ public:
     float getMass();
     float getSize();
     float getVolume();
+	bool operator<(const planetObj &po){ return (mass>po.mass);}
 
     /*void setRotation(vector3df rotz);
     void setPosition(vector3df posz);

@@ -4,18 +4,20 @@
 #define D 0					//Debug
 
 // change to user changable... maybe
-#define UpdatesPerFrame 25
-#define FramesPerSecond 10.0 //max
-double G=.37;				//Gravity Const
+#define UpdatesPerFrame 40
+#define FramesPerSecond .1 //max
+double G=1;	 //.37			//Gravity Const
 
 
 // dont mess with these
-#define t 0.01f				//Physics time step
+#define t 0.05f				//Physics time step
 #define SystemMass 1000		//Net mass of system
-#define numPieces 250.f		//
-#define StarSize .43f	//Percent of SystemMass
-#define TFORCE 2000
-#define OFORCE 4
+#define numPieces 1000.f		//
+//#define StarSize .43f	//Percent of SystemMass
+//#define TFORCE 0
+double OFORCE = .1;//.449;//
+double ROT = .89;//.474;//
+#define OPT 0
 
 float randf();
 
