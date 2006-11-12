@@ -5,7 +5,7 @@
 
 // change to user changable... maybe
 #define UpdatesPerFrame 40
-#define FramesPerSecond .1 //max
+#define FramesPerSecond 30 //max
 double G=1;	 //.37			//Gravity Const
 
 
