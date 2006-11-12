@@ -31,7 +31,7 @@ int main()
     char i;
     //std::cin >> i;
     
-	i='d';
+	i='c';
     if(OPT) i='f';
 	switch (i)
     {
@@ -66,15 +66,10 @@ int main()
     guienv->addStaticText(L"GravSim",
                           rect<int>(255, 255, 255, 0), true);
 
-    ISceneNode* skyBoxNode = 0;
-    skyBoxNode = smgr->addSkyBoxSceneNode(
-                     driver->getTexture("media/backstars.jpg"),
-                     driver->getTexture("media/backstars.jpg"),
-                     driver->getTexture("media/backstars.jpg"),
-                     driver->getTexture("media/backstars.jpg"),
-                     driver->getTexture("media/backstars.jpg"),
-                     driver->getTexture("media/backstars.jpg"));
+    ISceneNode* skyBoxNode = smgr->addSkyDomeSceneNode(
+                     driver->getTexture("media/backstars.jpg"),16,16,1,2);
 
+	
 	driver->setAmbientLight(video::SColor(0,60,60,60));
 	
     ICameraSceneNode *cam = smgr->addCameraSceneNode(0, vector3df(0,-200,0), vector3df(0,0,0));
@@ -82,11 +77,15 @@ int main()
     //device->getCursorControl()->setVisible(false);
 
     solarSys newsolar(smgr, driver);
-	 while (device->run())
+	int lastTime=0;
+	while (device->run())
     {
 		while(1)
 		{
-			while(driver->getFPS() > 30);
+			while(clock()-lastTime < ((float)CLK_TCK)/FramesPerSecond ); // prevent super speed
+			lastTime = clock();
+
+
 			driver->beginScene(true, true, SColor(0, 0, 0, 0));
             smgr->drawAll();
             guienv->drawAll();
