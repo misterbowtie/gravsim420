@@ -31,7 +31,11 @@ int main()
     char i;
     //std::cin >> i;
     
+<<<<<<< .mine
+	i='a';
+=======
 	i='c';
+>>>>>>> .r17
     if(OPT) i='f';
 	switch (i)
     {
@@ -82,26 +86,30 @@ int main()
     {
 		while(1)
 		{
+<<<<<<< .mine
+			//while(driver->getFPS() > 30);
+=======
 			while(clock()-lastTime < ((float)CLK_TCK)/FramesPerSecond ); // prevent super speed
 			lastTime = clock();
 
 
+>>>>>>> .r17
 			driver->beginScene(true, true, SColor(0, 0, 0, 0));
             smgr->drawAll();
             guienv->drawAll();
             driver->endScene();
 
-            for (int j=0;j<UpdatesPerFrame;j++)
+            for (int j=0;j<=UpdatesPerFrame;j++)
             {
                 newsolar.updatePhysics();
             }
 
-            vector3df v = (*newsolar.cam).getPosition();
-            cam->setPosition(v);
+            //vector3df v = (*newsolar.cam).getPosition();
+            //cam->setPosition(v);
             //cam->setTarget(v);
 
 			//cam->setPosition(newsolar.getStarPos()-vector3df(75,75,75));
-		    cam->setTarget(newsolar.getStarPos());
+		    //cam->setTarget(newsolar.getStarPos());
         }
     }
 
