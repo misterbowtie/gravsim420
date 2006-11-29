@@ -76,8 +76,6 @@ int main()
     //smgr->addCameraSceneNodeFPS(0,100.0f, -200.0f, 500.0f);
     //device->getCursorControl()->setVisible(false);
 
-	scene::IParticleSystemSceneNode* partmgr = smgr->addParticleSystemSceneNode();
-
 	solarSys newSolar(smgr, driver);
 	int lastTime=0;
 	vector3df largestStarPos;
@@ -97,17 +95,10 @@ int main()
             for (int j=0;j<=UpdatesPerFrame;j++)  //see what happens when you comment this out on alienware
             {
                 newSolar.updatePhysics();
-
-				largestStarPos = newSolar.getStarPos();  //Move camera out of loop for another cool view
-				cam->setPosition(largestStarPos-vector3df(35,35,35));
-				cam->setTarget(largestStarPos);
 			}
-
-            //vector3df v = (*newsolar.cam).getPosition();
-            //cam->setPosition(v);
-            //cam->setTarget(v);
-
-
+			largestStarPos = newSolar.getStarPos();  //Move camera out of loop for another cool view
+			cam->setPosition(largestStarPos-vector3df(35,35,35));
+			cam->setTarget(largestStarPos);
         }
     }
 
