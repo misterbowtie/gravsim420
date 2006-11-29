@@ -31,7 +31,7 @@ planetObj::planetObj(ISceneManager *smgrz, IVideoDriver* driverz, vector3df p = 
 	particle->setParticlesAreGlobal(false);
 	scene::IParticleEmitter* em = particle->createPointEmitter(
 	   core::vector3df(0.0f,.01f,0.0f),
-	   20,50,
+	   5,10,
 	   video::SColor(0,255,255,255), video::SColor(0,255,255,255),
 	   800,2000,180);
 	particle->setEmitter(em);
@@ -176,7 +176,7 @@ void planetObj::changeAttb()
 		smgr->addLightSceneNode(node);
 		node->setMaterialFlag(video::EMF_LIGHTING, false);
 		//node->setMaterialFlag(video::EMF_WIREFRAME, true);
-		node->setVisible(false);
+		//node->setVisible(false);
 
 		
     }

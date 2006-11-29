@@ -126,9 +126,9 @@ int main()
         {
             newSolar.updatePhysics();
 		}
-		//largestStarPos = newSolar.getStarPos();  //Move camera out of loop for another cool view
-		//cam->setPosition(largestStarPos-vector3df(35,35,35));
-		//cam->setTarget(largestStarPos);
+		largestStarPos = newSolar.getStarPos();  //Move camera out of loop for another cool view
+		cam->setPosition(largestStarPos-vector3df(35,35,35));
+		cam->setTarget(largestStarPos);
         
     }
 
