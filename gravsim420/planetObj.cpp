@@ -32,7 +32,7 @@ planetObj::planetObj(ISceneManager *smgrz, IVideoDriver* driverz, vector3df p = 
 planetObj::~planetObj()
 {
     
-	node->removeAll();
+	node->remove();
    	if (D){cout<<"\nDELETE PLANET.";report();}
 }
 
@@ -155,10 +155,10 @@ void planetObj::changeAttb()
 		smgr->addLightSceneNode(node);
 		node->setMaterialFlag(video::EMF_LIGHTING, false);
 
-		particle->setParticleSize(dimension2d<f32>(20.0f,20.0f));  //Adjust the particle Size
+		particle->setParticleSize(dimension2d<f32>(5.0f,5.0f));  //Adjust the particle Size
 		//Create an emitter with the particle Node object.  This is a box Emitter which just emits within a box
 		emitter = particle->createBoxEmitter(
-                aabbox3d<f32>(-50,50,-50,50,-50,50), 
+                aabbox3d<f32>(-size,size,-size,size,-size,size), 
                 vector3df(75.0f,75.0f,75.0f),
                 5,100, SColor(0,0,0,0),SColor(0,255,255,255), 1100,5000);
 		particle->setEmitter(emitter);
