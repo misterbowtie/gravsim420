@@ -25,7 +25,7 @@ using namespace std;
 class planetObj
 {
 public:
-    planetObj(ISceneManager *smgrz, IVideoDriver* driverz, vector3df p, vector3df v, vector3df r, float m, float s);
+    planetObj(ISceneManager *smgrz, IVideoDriver* driverz,  vector3df p, vector3df v, vector3df r, float m, float s);
     ~planetObj();
     void join(planetObj *p2);
     void addForce(vector3df f);
@@ -58,6 +58,9 @@ private:
     ISceneManager *smgr;
     IAnimatedMesh *mesh;
     IVideoDriver *driver;
+	IParticleSystemSceneNode *particle;  //Particle Node
+	IParticleEmitter *emitter;  //Particle Emitter holder
+	IParticleAffector *affector; //Particle affector holder
 
     vector3df rotationSpeed;
     vector3df rotation;

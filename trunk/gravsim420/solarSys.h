@@ -40,10 +40,13 @@ public:
 private:
     ISceneManager *smgr;
     IVideoDriver *driver;
+
     std::list<planetObj> poList;
     std::list<planetObj>::iterator p1;
     std::list<planetObj>::iterator p2;
-    int age;
+    vector3df largestStarPos;
+	float largestStarMass;
+	int age;
 	double sumDist;
 	int poSize;
 	vector3df r;

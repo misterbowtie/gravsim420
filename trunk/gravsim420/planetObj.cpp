@@ -23,14 +23,17 @@ planetObj::planetObj(ISceneManager *smgrz, IVideoDriver* driverz, vector3df p = 
 
     mesh = smgr->getMesh("media/earth.x");
     node = smgr->addAnimatedMeshSceneNode( mesh );
+	particle = smgr->addParticleSystemSceneNode(false, node, -1); //Create a particle node centered and attached to planet node
+	particle->setParticlesAreGlobal(true);  //Particles emission will move relative to parent node
 
     changeAttb();
 }
 
 planetObj::~planetObj()
 {
-    node->remove();
-    if (D){cout<<"\nDELETE PLANET.";report();}
+    
+	node->removeAll();
+   	if (D){cout<<"\nDELETE PLANET.";report();}
 }
 
 void planetObj::report()
@@ -142,6 +145,8 @@ void planetObj::changeAttb()
 {
     size = pow(volume,.3333f);
 
+	//node->setMaterialFlag(video::EMF_NORMALIZE_NORMALS, true);  //fixes lighting?
+
     node->setMaterialFlag(EMF_LIGHTING, false);
 
     if (mass>SystemMass*.1f)
@@ -149,6 +154,21 @@ void planetObj::changeAttb()
         node->setMaterialTexture( 0, driver->getTexture("media/sun.jpg") );
 		smgr->addLightSceneNode(node);
 		node->setMaterialFlag(video::EMF_LIGHTING, false);
+
+		particle->setParticleSize(dimension2d<f32>(20.0f,20.0f));  //Adjust the particle Size
+		//Create an emitter with the particle Node object.  This is a box Emitter which just emits within a box
+		emitter = particle->createBoxEmitter(
+                aabbox3d<f32>(-50,50,-50,50,-50,50), 
+                vector3df(75.0f,75.0f,75.0f),
+                5,100, SColor(0,0,0,0),SColor(0,255,255,255), 1100,5000);
+		particle->setEmitter(emitter);
+		affector = particle->createFadeOutParticleAffector();
+		particle->addAffector(affector);
+		particle->setMaterialFlag(video::EMF_LIGHTING, false);
+		particle->setMaterialTexture(0,driver->getTexture("media/fire.bmp"));
+		particle->setMaterialType(video::EMT_TRANSPARENT_VERTEX_ALPHA);
+		emitter->drop();
+		affector->drop();
     }
     else 
 	{
