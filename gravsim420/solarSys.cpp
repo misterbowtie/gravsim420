@@ -17,7 +17,7 @@ solarSys::solarSys(ISceneManager *smgrz, IVideoDriver *driverz)
     driver = driverz;
 
 	reset();
-
+	largestStarMass = 0;
 	if(OPT) optimizeSystem();
 
 	cam = poList.begin();
@@ -64,12 +64,13 @@ void solarSys::updatePhysics()
 				p2++;
 			}
 		}
+		if(p1->getMass() > largestStarMass) {largestStarMass = p1->getMass(); largestStarPos = p1->getPosition();}
     }
 
 
     for (p1 = poList.begin(); p1 != poList.end();)
     {	// delete distant planets
-		if((*p1).getPosition().getLength()>800)
+		if(((*p1).getPosition() - largestStarPos).getLength() > 1200)
 		{	p1 = poList.erase(p1);
 			continue;
 		}
@@ -81,7 +82,7 @@ void solarSys::updatePhysics()
     }
 
 	// big bang
-    if (poList.size() < 2)
+    if (poList.size() == 1)
     {
 		reset();
 		//printList();
@@ -103,7 +104,8 @@ void solarSys::updatePhysics()
 
 vector3df solarSys::getStarPos()
 {
-    return (*poList.begin()).getPosition();
+	largestStarMass = 0;
+	return largestStarPos;
 }
 
 void solarSys::printList()
