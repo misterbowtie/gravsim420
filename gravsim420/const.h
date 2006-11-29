@@ -1,10 +1,12 @@
 #ifndef CONST_H
 #define CONST_H
 
+#include <math.h>
+
 #define D 0					//Debug
 
 // change to user changable... maybe
-#define UpdatesPerFrame 40
+int UpdatesPerFrame =1;
 #define FramesPerSecond 30 //max
 double G=1;	 //.37			//Gravity Const
 
