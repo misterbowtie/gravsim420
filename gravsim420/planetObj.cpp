@@ -21,10 +21,29 @@ planetObj::planetObj(ISceneManager *smgrz, IVideoDriver* driverz, vector3df p = 
     mass = m;
     volume = s;
 
-    mesh = smgr->getMesh("media/earth.x");
-    node = smgr->addAnimatedMeshSceneNode( mesh );
-	particle = smgr->addParticleSystemSceneNode(false, node, -1); //Create a particle node centered and attached to planet node
-	particle->setParticlesAreGlobal(true);  //Particles emission will move relative to parent node
+    //mesh = smgr->getMesh("media/earth.x");
+    node = smgr->addSphereSceneNode(1,10);
+
+	particle = smgr->addParticleSystemSceneNode(false,node);
+	//particle->setPosition(core::vector3df(0,0,0));
+	particle->setScale(core::vector3df(2,2,2));
+	particle->setParticleSize(core::dimension2d<f32>(12.0f, 12.0f));
+	particle->setParticlesAreGlobal(false);
+	scene::IParticleEmitter* em = particle->createPointEmitter(
+	   core::vector3df(0.0f,.01f,0.0f),
+	   20,50,
+	   video::SColor(0,255,255,255), video::SColor(0,255,255,255),
+	   800,2000,180);
+	particle->setEmitter(em);
+	em->drop();
+	scene::IParticleAffector* paf =
+	   particle->createFadeOutParticleAffector();
+
+	particle->addAffector(paf);
+	paf->drop();
+	particle->setMaterialFlag(video::EMF_LIGHTING, false);
+	particle->setMaterialTexture(0, driver->getTexture("media/fire.bmp"));
+	particle->setMaterialType(video::EMT_TRANSPARENT_VERTEX_ALPHA);
 
     changeAttb();
 }
@@ -85,6 +104,8 @@ void planetObj::move()
     node->setRotation(rotation);
 
     node->setPosition(position);
+	emitter = particle->createPointEmitter();
+	
 }
 
 void planetObj::explode(std::list<planetObj> &poList)
@@ -154,24 +175,14 @@ void planetObj::changeAttb()
         node->setMaterialTexture( 0, driver->getTexture("media/sun.jpg") );
 		smgr->addLightSceneNode(node);
 		node->setMaterialFlag(video::EMF_LIGHTING, false);
+		//node->setMaterialFlag(video::EMF_WIREFRAME, true);
+		node->setVisible(false);
 
-		particle->setParticleSize(dimension2d<f32>(5.0f,5.0f));  //Adjust the particle Size
-		//Create an emitter with the particle Node object.  This is a box Emitter which just emits within a box
-		emitter = particle->createBoxEmitter(
-                aabbox3d<f32>(-size,size,-size,size,-size,size), 
-                vector3df(75.0f,75.0f,75.0f),
-                5,100, SColor(0,0,0,0),SColor(0,255,255,255), 1100,5000);
-		particle->setEmitter(emitter);
-		affector = particle->createFadeOutParticleAffector();
-		particle->addAffector(affector);
-		particle->setMaterialFlag(video::EMF_LIGHTING, false);
-		particle->setMaterialTexture(0,driver->getTexture("media/fire.bmp"));
-		particle->setMaterialType(video::EMT_TRANSPARENT_VERTEX_ALPHA);
-		emitter->drop();
-		affector->drop();
+		
     }
     else 
 	{
+		node->setVisible(true);
 		if (mass/volume > 1.2)
 		{	//rock
 			node->setMaterialTexture( 0, driver->getTexture("media/dirt.jpg") );
@@ -196,7 +207,6 @@ void planetObj::changeAttb()
 			node->setMaterialTexture( 0, driver->getTexture("media/gas.jpg") );
 		}
 		node->setMaterialFlag(video::EMF_LIGHTING, true);
-		node->addShadowVolumeSceneNode();
 	}
 	node->setScale(vector3df(size,size,size));
 
