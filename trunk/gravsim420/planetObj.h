@@ -52,11 +52,11 @@ public:
     void setVolume(float volz);*/
 
 
-    IAnimatedMeshSceneNode *node;
+    ISceneNode *node;
 
 private:
     ISceneManager *smgr;
-    IAnimatedMesh *mesh;
+    //IAnimatedMesh *mesh;
     IVideoDriver *driver;
 	IParticleSystemSceneNode *particle;  //Particle Node
 	IParticleEmitter *emitter;  //Particle Emitter holder
