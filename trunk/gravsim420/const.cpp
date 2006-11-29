@@ -2,6 +2,7 @@
 #define CONST_CPP
 
 #include "const.h"
+#include <math.h>
 
 float randf()
 {

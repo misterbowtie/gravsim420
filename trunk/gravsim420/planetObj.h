@@ -59,8 +59,6 @@ private:
     //IAnimatedMesh *mesh;
     IVideoDriver *driver;
 	IParticleSystemSceneNode *particle;  //Particle Node
-	IParticleEmitter *emitter;  //Particle Emitter holder
-	IParticleAffector *affector; //Particle affector holder
 
     vector3df rotationSpeed;
     vector3df rotation;

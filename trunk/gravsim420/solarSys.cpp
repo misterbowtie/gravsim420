@@ -31,7 +31,7 @@ void solarSys::reset()
 	//G=.37;
 	age=0;
 	poList.clear();
-	planetObj *npo = new planetObj(smgr, driver);
+	planetObj *npo = new planetObj(smgr, driver,vector3df(),vector3df(),vector3df(0,ROT,0),SystemMass, SystemMass);
     poList.push_back((*npo));
 }
 

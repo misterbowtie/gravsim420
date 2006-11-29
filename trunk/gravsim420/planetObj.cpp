@@ -8,7 +8,7 @@
 
 using namespace std;
 
-planetObj::planetObj(ISceneManager *smgrz, IVideoDriver* driverz, vector3df p = vector3df(0,0,0), vector3df v = vector3df(0,0,0), vector3df r = vector3df(0,ROT,0), float m = SystemMass, float s=SystemMass)
+planetObj::planetObj(ISceneManager *smgrz, IVideoDriver* driverz, vector3df p = vector3df(0,0,0), vector3df v = vector3df(0,0,0), vector3df r = vector3df(0,ROT,0), float m = 1, float s=1)
 {
     smgr = smgrz;
     driver = driverz;
@@ -25,25 +25,7 @@ planetObj::planetObj(ISceneManager *smgrz, IVideoDriver* driverz, vector3df p = 
     node = smgr->addSphereSceneNode(1,10);
 
 	particle = smgr->addParticleSystemSceneNode(false,node);
-	//particle->setPosition(core::vector3df(0,0,0));
-	particle->setScale(core::vector3df(2,2,2));
-	particle->setParticleSize(core::dimension2d<f32>(12.0f, 12.0f));
-	particle->setParticlesAreGlobal(false);
-	scene::IParticleEmitter* em = particle->createPointEmitter(
-	   core::vector3df(0.0f,.01f,0.0f),
-	   5,10,
-	   video::SColor(0,255,255,255), video::SColor(0,255,255,255),
-	   800,2000,180);
-	particle->setEmitter(em);
-	em->drop();
-	scene::IParticleAffector* paf =
-	   particle->createFadeOutParticleAffector();
-
-	particle->addAffector(paf);
-	paf->drop();
-	particle->setMaterialFlag(video::EMF_LIGHTING, false);
-	particle->setMaterialTexture(0, driver->getTexture("media/fire.bmp"));
-	particle->setMaterialType(video::EMT_TRANSPARENT_VERTEX_ALPHA);
+	
 
     changeAttb();
 }
@@ -104,7 +86,7 @@ void planetObj::move()
     node->setRotation(rotation);
 
     node->setPosition(position);
-	emitter = particle->createPointEmitter();
+	//emitter = particle->createPointEmitter();
 	
 }
 
@@ -169,25 +151,38 @@ void planetObj::changeAttb()
 	//node->setMaterialFlag(video::EMF_NORMALIZE_NORMALS, true);  //fixes lighting?
 
     node->setMaterialFlag(EMF_LIGHTING, false);
+	particle->setEmitter(0);
 
     if (mass>SystemMass*.1f)
     {	//star
         node->setMaterialTexture( 0, driver->getTexture("media/sun.jpg") );
-		smgr->addLightSceneNode(node);
+		smgr->addLightSceneNode(node);  //if this is being executed for all nodes....then the lighting is fucked up too
 		node->setMaterialFlag(video::EMF_LIGHTING, false);
-		//node->setMaterialFlag(video::EMF_WIREFRAME, true);
-		//node->setVisible(false);
+		node->setMaterialType(video::EMT_TRANSPARENT_VERTEX_ALPHA);
 
-		
+		//particle = smgr->addParticleSystemSceneNode(false,node);
+		particle->setScale(vector3df(2,2,2));
+		particle->setParticleSize(dimension2d<f32>(8.0f, 8.0f));
+		particle->setParticlesAreGlobal(false);  //makes it only create particles when changeattr is called
+		IParticleEmitter* em = particle->createPointEmitter(vector3df(0.0f,size*.002f,0.0f),10,50,SColor(0,255,255,255), SColor(0,255,255,255), 800,850,180);
+		//
+		particle->setEmitter(em);
+		em->drop();
+		IParticleAffector* paf = particle->createFadeOutParticleAffector();
+		particle->addAffector(paf);
+		paf->drop();
+
+		particle->setMaterialFlag(video::EMF_LIGHTING, false);
+		particle->setMaterialTexture(0, driver->getTexture("media/fire.bmp"));
+		particle->setMaterialType(video::EMT_TRANSPARENT_VERTEX_ALPHA);
     }
     else 
 	{
-		node->setVisible(true);
 		if (mass/volume > 1.2)
 		{	//rock
 			node->setMaterialTexture( 0, driver->getTexture("media/dirt.jpg") );
 		}
-		else if(mass/volume > 1)
+		else if(mass/volume > 1.1)
 		{
 			//redrock
 			node->setMaterialTexture( 0, driver->getTexture("media/redrock.jpg") );
@@ -196,6 +191,24 @@ void planetObj::changeAttb()
 		{
 			//ice
 			node->setMaterialTexture( 0, driver->getTexture("media/ice.jpg") );
+
+			//particle = smgr->addParticleSystemSceneNode(false,node);
+			particle->setScale(vector3df(2,2,2));
+			particle->setParticleSize(dimension2d<f32>(1.0f, 1.0f));
+			particle->setParticlesAreGlobal(false);  //makes it only create particles when changeattr is called
+			//IParticleEmitter* em = particle->createPointEmitter(vector3df(.0f,.001f,.0f),10,50,SColor(0,255,255,255), SColor(0,255,255,255), 8000,8500,180);
+			IParticleEmitter* em = particle->createBoxEmitter(core::aabbox3d<f32>(-size,size,-size,size,-size,size),
+				vector3df(.0f,.001f,.0f),10,50,SColor(0,255,255,255), SColor(0,255,255,255), 8000,8500,180);
+			
+			particle->setEmitter(em);
+			em->drop();
+			IParticleAffector* paf = particle->createFadeOutParticleAffector();
+			particle->addAffector(paf);
+			paf->drop();
+
+			particle->setMaterialFlag(video::EMF_LIGHTING, false);
+			particle->setMaterialTexture(0, driver->getTexture("media/fire.bmp"));
+			particle->setMaterialType(video::EMT_TRANSPARENT_VERTEX_ALPHA);
 		}
 		else if(mass/volume > .9)
 		{
