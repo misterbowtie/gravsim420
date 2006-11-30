@@ -71,12 +71,17 @@ int main()
 
     ISceneNode* skyBoxNode = smgr->addSkyDomeSceneNode(driver->getTexture("media/backstars.jpg"),16,16,1,2);
 	driver->setAmbientLight(video::SColor(0,60,60,60));
-    ICameraSceneNode *cam = smgr->addCameraSceneNode(0,vector3df(-50,50,-150), vector3df(0,0,0));
+    ICameraSceneNode *cam ;//= smgr->addCameraSceneNode(0,vector3df(-50,50,-150), vector3df(0,0,0));
 
-    //smgr->addCameraSceneNodeFPS(0,100.0f, -200.0f, 500.0f);
-    //device->getCursorControl()->setVisible(false);
+
+    cam = smgr->addCameraSceneNodeFPS(0,100.0f, -200.0f, 500.0f);
+    device->getCursorControl()->setVisible(false);
+
 
 	solarSys newSolar(smgr, driver);
+
+	receiver.setup(cam,&newSolar);
+
 	int lastTime=0;
 	vector3df largestStarPos;
 	while (device->run())
@@ -90,14 +95,11 @@ int main()
         //guienv->drawAll();
         driver->endScene();
 
-        for (int j=0;j<=UpdatesPerFrame;j++)  //see what happens when you comment this out on alienware
+        for (int j=0;j<UpdatesPerFrame;j++)  //see what happens when you comment this out on alienware
         {
             newSolar.updatePhysics();
 			
 		}
-		largestStarPos = newSolar.getStarPos();  //Move camera out of loop for another cool view
-		cam->setPosition(largestStarPos-vector3df(75,75,75));
-		cam->setTarget(largestStarPos);
     }
 
     device->drop();
