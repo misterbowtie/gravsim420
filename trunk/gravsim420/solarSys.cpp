@@ -17,10 +17,8 @@ solarSys::solarSys(ISceneManager *smgrz, IVideoDriver *driverz)
     driver = driverz;
 
 	reset();
-	largestStarMass = 0;
 	if(OPT) optimizeSystem();
 
-	cam = poList.begin();
 }
 
 solarSys::~solarSys()
@@ -38,9 +36,11 @@ void solarSys::reset()
 void solarSys::updatePhysics()
 {
     age++;
-	cam = ++poList.begin();
-//	sumDist=0;
+	
 	poSize = poList.size();
+	p1 = poList.begin();
+	if(star==NULL)
+		star=&(*p1);
     for (p1 = poList.begin(); p1 != poList.end(); p1++)
     {
         p2 = p1;
@@ -49,7 +49,6 @@ void solarSys::updatePhysics()
         {
 			r = (*p2).getPosition() - (*p1).getPosition();
 			dist = r.getLength();
-//			sumDist += dist;
 			if ((dist < (*p1).getSize()+(*p2).getSize()))
             {
                 (*p1).join(&(*p2));
@@ -64,13 +63,13 @@ void solarSys::updatePhysics()
 				p2++;
 			}
 		}
-		if(p1->getMass() > largestStarMass) {largestStarMass = p1->getMass(); largestStarPos = p1->getPosition();}
+		if(p1->getMass() > star->getMass()) star=&(*p1);
     }
 
 
     for (p1 = poList.begin(); p1 != poList.end();)
     {	// delete distant planets
-		if(((*p1).getPosition() - largestStarPos).getLength() > 1200)
+		if( (*p1).getPosition().getDistanceFrom(star->getPosition()) > 1200)
 		{	p1 = poList.erase(p1);
 			continue;
 		}
@@ -102,10 +101,9 @@ void solarSys::updatePhysics()
 	
 }
 
-vector3df solarSys::getStarPos()
+planetObj* solarSys::getStar()
 {
-	largestStarMass = 0;
-	return largestStarPos;
+	return star;
 }
 
 void solarSys::printList()

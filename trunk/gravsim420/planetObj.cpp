@@ -192,23 +192,7 @@ void planetObj::changeAttb()
 			//ice
 			node->setMaterialTexture( 0, driver->getTexture("media/ice.jpg") );
 
-			//particle = smgr->addParticleSystemSceneNode(false,node);
-			particle->setScale(vector3df(2,2,2));
-			particle->setParticleSize(dimension2d<f32>(1.0f, 1.0f));
-			particle->setParticlesAreGlobal(false);  //makes it only create particles when changeattr is called
-			//IParticleEmitter* em = particle->createPointEmitter(vector3df(.0f,.001f,.0f),10,50,SColor(0,255,255,255), SColor(0,255,255,255), 8000,8500,180);
-			IParticleEmitter* em = particle->createBoxEmitter(core::aabbox3d<f32>(-size,size,-size,size,-size,size),
-				vector3df(.0f,.001f,.0f),10,50,SColor(0,255,255,255), SColor(0,255,255,255), 8000,8500,180);
 			
-			particle->setEmitter(em);
-			em->drop();
-			IParticleAffector* paf = particle->createFadeOutParticleAffector();
-			particle->addAffector(paf);
-			paf->drop();
-
-			particle->setMaterialFlag(video::EMF_LIGHTING, false);
-			particle->setMaterialTexture(0, driver->getTexture("media/fire.bmp"));
-			particle->setMaterialType(video::EMT_TRANSPARENT_VERTEX_ALPHA);
 		}
 		else if(mass/volume > .9)
 		{

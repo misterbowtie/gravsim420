@@ -31,12 +31,11 @@ public:
 
     void reset();
     void updatePhysics();
-    vector3df getStarPos();
+    planetObj* getStar();
 	void printList();
 	void optimizeSystem();
 
-    std::list<planetObj>::iterator cam;
-
+    
 private:
     ISceneManager *smgr;
     IVideoDriver *driver;
@@ -44,8 +43,9 @@ private:
     std::list<planetObj> poList;
     std::list<planetObj>::iterator p1;
     std::list<planetObj>::iterator p2;
-    vector3df largestStarPos;
-	float largestStarMass;
+    
+	planetObj* star;
+
 	int age;
 	double sumDist;
 	int poSize;
