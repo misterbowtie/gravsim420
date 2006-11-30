@@ -1,7 +1,7 @@
 #include <irrlicht.h>
 //#include <sys/time.h>		//Linux
  #include <time.h>			//Windows
-#include "input.cpp"
+#include "control.cpp"
 
 using namespace irr;
 
