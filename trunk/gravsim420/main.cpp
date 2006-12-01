@@ -35,23 +35,15 @@ int main()
     //std::cin >> i;
     
 	i='c';
-
 	switch (i)
     {
-    case 'a':
-        driverType = video::EDT_DIRECT3D9;break;
-    case 'b':
-        driverType = video::EDT_DIRECT3D8;break;
-    case 'c':
-        driverType = video::EDT_OPENGL;   break;
-    case 'd':
-        driverType = video::EDT_SOFTWARE; break;
-    case 'e':
-        driverType = video::EDT_SOFTWARE2;break;
-    case 'f':
-        driverType = video::EDT_NULL;     break;
-    default:
-        return 1;
+	    case 'a': driverType = video::EDT_DIRECT3D9;break;
+		case 'b': driverType = video::EDT_DIRECT3D8;break;
+		case 'c': driverType = video::EDT_OPENGL;   break;
+		case 'd': driverType = video::EDT_SOFTWARE; break;
+		case 'e': driverType = video::EDT_SOFTWARE2;break;
+		case 'f': driverType = video::EDT_NULL;     break;
+		default:  return 1;
     }
 
     IrrlichtDevice *device =
@@ -65,22 +57,19 @@ int main()
     IVideoDriver* driver = device->getVideoDriver();
     ISceneManager* smgr = device->getSceneManager();
     IGUIEnvironment* guienv = device->getGUIEnvironment();
-
     guienv->addStaticText(L"GravSim",
                           rect<int>(255, 255, 255, 0), true);
 
     ISceneNode* skyBoxNode = smgr->addSkyDomeSceneNode(driver->getTexture("media/backstars.jpg"),16,16,1,2);
 	driver->setAmbientLight(video::SColor(0,60,60,60));
     ICameraSceneNode *cam ;//= smgr->addCameraSceneNode(0,vector3df(-50,50,-150), vector3df(0,0,0));
-
-
+	
     cam = smgr->addCameraSceneNodeFPS(0,100.0f, -200.0f, 500.0f);
-    device->getCursorControl()->setVisible(false);
-
+    //device->getCursorControl()->setVisible(false);
 
 	solarSys newSolar(smgr, driver);
 
-	receiver.setup(cam,&newSolar);
+	receiver.setup(smgr, cam, &newSolar);
 
 	int lastTime=0;
 	vector3df largestStarPos;
@@ -100,7 +89,7 @@ int main()
             newSolar.updatePhysics();
 			
 		}
-    }
+	}
 
     device->drop();
 
