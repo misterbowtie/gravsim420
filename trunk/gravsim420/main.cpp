@@ -65,8 +65,7 @@ int main()
     ICameraSceneNode *cam ;//= smgr->addCameraSceneNode(0,vector3df(-50,50,-150), vector3df(0,0,0));
 	
     cam = smgr->addCameraSceneNodeFPS(0,100.0f, -200.0f, 500.0f);
-    //device->getCursorControl()->setVisible(false);
-
+    device->getCursorControl()->setVisible(true);
 	solarSys newSolar(smgr, driver);
 
 	receiver.setup(smgr, cam, &newSolar);
