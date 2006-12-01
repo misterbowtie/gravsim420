@@ -34,6 +34,7 @@ public:
     planetObj* getStar();
 	void printList();
 	void optimizeSystem();
+	int getPlanetCount();
 	void spawnPlanet(vector3df position, vector3df direction);
 
     

@@ -106,9 +106,14 @@ planetObj* solarSys::getStar()
 	return star;
 }
 
+int solarSys::getPlanetCount()
+{
+	return poList.size();
+}
+
 void solarSys::spawnPlanet(vector3df position, vector3df direction)
 {
-	planetObj *npo = new planetObj(smgr, driver, position, direction, vector3df(0,ROT,0), 20, 20);
+	planetObj *npo = new planetObj(smgr, driver, position, direction, vector3df(0,ROT,0), 5, 1);
     poList.push_back((*npo));
 }
 

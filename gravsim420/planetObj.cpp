@@ -196,12 +196,13 @@ void planetObj::changeAttb()
 		}
 		else if(mass/volume > .9)
 		{
-			//planet
-			node->setMaterialTexture( 0, driver->getTexture("media/earth.jpg") );
-		}
-		else{
 			//gas
-			node->setMaterialTexture( 0, driver->getTexture("media/gas.jpg") );
+			node->setMaterialTexture( 0, driver->getTexture("media/gas.jpg"));
+		}
+		else
+		{
+			//planet
+			node->setMaterialTexture( 0, driver->getTexture("media/earth.jpg"));
 		}
 		node->setMaterialFlag(video::EMF_LIGHTING, true);
 	}

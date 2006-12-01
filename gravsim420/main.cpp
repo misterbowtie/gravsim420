@@ -48,10 +48,9 @@ int main()
 
     IrrlichtDevice *device =
         createDevice(driverType, core::dimension2d<s32>(640, 480), 16,false,false,true,&receiver);
-
     if (device == 0)
         return 1;
-
+	device->setResizeAble(true);
     device->setWindowCaption(L"GravSim");
 
     IVideoDriver* driver = device->getVideoDriver();
@@ -61,17 +60,20 @@ int main()
                           rect<int>(255, 255, 255, 0), true);
 
     ISceneNode* skyBoxNode = smgr->addSkyDomeSceneNode(driver->getTexture("media/backstars.jpg"),16,16,1,2);
-	driver->setAmbientLight(video::SColor(0,60,60,60));
-    ICameraSceneNode *cam ;//= smgr->addCameraSceneNode(0,vector3df(-50,50,-150), vector3df(0,0,0));
 	
+	driver->setAmbientLight(video::SColor(0,50,50,50));
+    
+	ICameraSceneNode *cam ;//= smgr->addCameraSceneNode(0,vector3df(-50,50,-150), vector3df(0,0,0));
     cam = smgr->addCameraSceneNodeFPS(0,100.0f, -200.0f, 500.0f);
-    device->getCursorControl()->setVisible(true);
+    //device->getCursorControl()->setVisible(true);
 	solarSys newSolar(smgr, driver);
 
-	receiver.setup(smgr, cam, &newSolar);
+	receiver.setup(smgr, cam, &newSolar, device);
 
 	int lastTime=0;
 	vector3df largestStarPos;
+	stringw str;
+	vector3df campos, camtarget;
 	while (device->run())
     {
 		//while(driver->getFPS() > 30);
@@ -80,7 +82,7 @@ int main()
 
 		driver->beginScene(true, true, SColor(0, 0, 0, 0));
         smgr->drawAll();
-        //guienv->drawAll();
+        guienv->drawAll();
         driver->endScene();
 
         for (int j=0;j<UpdatesPerFrame;j++)  //see what happens when you comment this out on alienware
@@ -88,6 +90,33 @@ int main()
             newSolar.updatePhysics();
 			
 		}
+		
+		str = L"";
+		str = L"Gravity: ";
+		str += G;
+		str += L"\nUpdates: ";
+		str += UpdatesPerFrame;
+		str += L"\nTimeStep: ";
+		str += t;
+		str += L"\nPlanets: ";
+		str += newSolar.getPlanetCount();
+		str += L"\nNumPieces: ";
+		str += numPieces;
+		campos = cam->getPosition();
+		str += L"\nX: ";
+		str += campos.X;
+		str += L"\nY: ";
+		str += campos.Y;
+		str += L"\nZ: ";
+		str += campos.Z;
+		camtarget = cam->getTarget();
+		str += L"\ntX: ";
+		str += camtarget.X;
+		str += L"\ntY: ";
+		str += camtarget.Y;
+		str += L"\ntZ: ";
+		str += camtarget.Z;
+		guienv->addStaticText(str.c_str(), rect<int>(10,10,120,120), true,true,0,-1,true);
 	}
 
     device->drop();

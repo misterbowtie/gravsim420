@@ -14,7 +14,7 @@ double G=1;	 //.37			//Gravity Const
 // dont mess with these
 double t = 0.05f;				//Physics time step
 #define SystemMass 1000		//Net mass of system
-#define numPieces 1000.f		//
+double numPieces = 1000;		//
 //#define StarSize .43f	//Percent of SystemMass
 //#define TFORCE 0
 double OFORCE = .1;//.449;//
