@@ -34,7 +34,7 @@ int main()
     char i;
     //std::cin >> i;
     
-	i='c';
+	i='a';
 	switch (i)
     {
 	    case 'a': driverType = video::EDT_DIRECT3D9;break;
