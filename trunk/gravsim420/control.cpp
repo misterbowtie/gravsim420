@@ -22,22 +22,21 @@ private:
 	ICameraSceneNode *cam;
 	solarSys *sys;
 	ISceneNode *selectedNode;
+	IrrlichtDevice *device;
+	bool mouseEnabled;
 public:
 	
-	void setup(ISceneManager *smgrz, ICameraSceneNode *camz, solarSys *sysz)
+	void setup(ISceneManager *smgrz, ICameraSceneNode *camz, solarSys *sysz, IrrlichtDevice *devicez)
 	{
 		smgr = smgrz;
 		cam = camz;
 		sys = sysz;
+		device = devicez;
+		mouseEnabled = false;
 	}
 
 	virtual bool OnEvent(SEvent event)
 	{
-		/*
-		If the key 'W' or 'S' was left up, we get the position of the scene node,
-		and modify the Y coordinate a little bit. So if you press 'W', the node
-		moves up, and if you press 'S' it moves down.
-		*/
 
 		if (event.EventType == irr::EET_MOUSE_INPUT_EVENT)
 		{
@@ -61,6 +60,7 @@ public:
 				}
 			case EMIE_MOUSE_MOVED:
 				{
+					//event.MouseInput.X;
 					//type 1. set camera back to root scene node
 					vector3df pos = cam->getAbsolutePosition();
 					cam->setParent(smgr->getRootSceneNode());
@@ -71,7 +71,7 @@ public:
 				}
 			case EMIE_LMOUSE_PRESSED_DOWN:
 				{
-					sys->spawnPlanet(cam->getPosition(), -cam->getTarget().normalize()*5);
+					sys->spawnPlanet(cam->getPosition(), (cam->getTarget()-cam->getPosition()).normalize()*15);
 					break;
 				}
 			}
@@ -134,19 +134,27 @@ public:
 					printf("\nTimeStep: %f",t);
 					break;
 				}
-
+			case KEY_KEY_Z:
+			case KEY_KEY_X:
+				{
+					numPieces += event.KeyInput.Key == KEY_KEY_Z ? -5 : 5;
+					if(numPieces<50) numPieces=50;
+					else if(numPieces>1000) numPieces=1000;
+					printf("\nNumPieces: %f",numPieces);
+					break;
+				}
 			case KEY_KEY_P:
 				{
 					UpdatesPerFrame = 0;
 					printf("\nUpdates: %d",UpdatesPerFrame);
 					break;
 				}
-			case KEY_KEY_B:
+			case KEY_KEY_E:
 				{
-					planetObj* star = sys->getStar();  
-					cam->setParent(star->node);
-					//cam->setPosition(vector3df(75,75,75));
-					//cam->setTarget(vector3df(0,0,0));
+					//planetObj* star = sys->getStar();  
+					//cam->setParent(star->node);
+					cam->setPosition(vector3df(35,35,35));
+					cam->setTarget(sys->getStar()->getPosition());
 					break;
 				}
 			case KEY_KEY_R:
@@ -154,8 +162,31 @@ public:
 					sys->reset();
 					break;
 				}
+			case KEY_KEY_T:
+				{
+					G=1;
+					UpdatesPerFrame = 1;
+					t=.05;
+					break;
+				}
+			case KEY_KEY_Y:
+				{
+					cam->setPosition(vector3df(-35,-35,-35));
+					cam->setTarget(vector3df(0,0,0));
+					break;
+				}
+			case KEY_KEY_Q:
+				{
+					mouseEnabled = !mouseEnabled;
+					if (mouseEnabled)
+						device->getCursorControl()->drop();
+					else
+						device->getCursorControl()->setVisible(true);
+					break;
+				}
 				return true;
 			}
+
 		}
 
 		return false;
