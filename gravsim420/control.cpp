@@ -183,14 +183,12 @@ public:
 					{
 						currCamPos = cam->getPosition();
 						currCamTarget = cam->getTarget();
-						cam->drop();
 						cam = smgr->addCameraSceneNode(0,currCamPos,currCamTarget);
 					}
 					else
 					{
 						currCamPos = cam->getPosition();
 						currCamTarget = cam->getTarget();
-						cam->drop();
 						cam = smgr->addCameraSceneNodeFPS(0,100.0f, -200.0f, 500.0f);
 					}
 					mouseEnabled = !mouseEnabled;
