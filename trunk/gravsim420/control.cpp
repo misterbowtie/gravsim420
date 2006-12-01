@@ -24,6 +24,8 @@ private:
 	ISceneNode *selectedNode;
 	IrrlichtDevice *device;
 	bool mouseEnabled;
+	vector3df currCamPos;
+	vector3df currCamTarget;
 public:
 	
 	void setup(ISceneManager *smgrz, ICameraSceneNode *camz, solarSys *sysz, IrrlichtDevice *devicez)
@@ -177,11 +179,19 @@ public:
 				}
 			case KEY_KEY_Q:
 				{
-					mouseEnabled = !mouseEnabled;
 					if (mouseEnabled)
-						device->getCursorControl()->drop();
+					{
+						currCamPos = cam->getPosition();
+						currCamTarget = cam->getTarget();
+						cam = smgr->addCameraSceneNode(0,currCamPos,currCamTarget);
+					}
 					else
-						device->getCursorControl()->setVisible(true);
+					{
+						currCamPos = cam->getPosition();
+						currCamTarget = cam->getTarget();
+						cam = smgr->addCameraSceneNodeFPS(0,100.0f, -200.0f, 500.0f);
+					}
+					mouseEnabled = !mouseEnabled;
 					break;
 				}
 				return true;
