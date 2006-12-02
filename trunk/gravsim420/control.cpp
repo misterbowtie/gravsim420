@@ -35,6 +35,7 @@ public:
 		sys = sysz;
 		device = devicez;
 		mouseEnabled = true;
+		device->getCursorControl()->setVisible(false);
 	}
 
 	virtual bool OnEvent(SEvent event)
@@ -184,12 +185,14 @@ public:
 						currCamPos = cam->getPosition();
 						currCamTarget = cam->getTarget();
 						cam = smgr->addCameraSceneNode(0,currCamPos,currCamTarget);
+						device->getCursorControl()->setVisible(true);
 					}
 					else
 					{
 						currCamPos = cam->getPosition();
 						currCamTarget = cam->getTarget();
 						cam = smgr->addCameraSceneNodeFPS(0,100.0f, -200.0f, 500.0f);
+						device->getCursorControl()->setVisible(false);
 					}
 					mouseEnabled = !mouseEnabled;
 					break;
