@@ -80,8 +80,8 @@ int main()
 	strControls += L"\nUpdates (I/O/P)";
 	strControls += L"\nTimeStep (N/M)";
 	strControls += L"\nNumPieces (Z/X)";
-	strControls += L"\nResetCamera (E)";
-	strControls += L"\nResetSystem (R)";
+	strControls += L"\nResetSystem1 (R)";
+	strControls += L"\nResetSystem2 (E)";
 	strControls += L"\nResetDefault (T)";
 	strControls += L"\nOriginCam (Y)";
 	strControls += L"\nToggleMouse (Q)";
