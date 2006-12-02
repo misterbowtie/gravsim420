@@ -156,10 +156,7 @@ public:
 				}
 			case KEY_KEY_E:
 				{
-					//planetObj* star = sys->getStar();  
-					//fpsCam->setParent(star->node);
-					fpsCam->setPosition(vector3df(35,35,35));
-					fpsCam->setTarget(sys->getStar()->getPosition());
+					sys->resetMatt();
 					break;
 				}
 			case KEY_KEY_R:

@@ -33,6 +33,26 @@ void solarSys::reset()
     poList.push_back((*npo));
 }
 
+void solarSys::resetMatt()
+{
+	//G=.37;
+	age=0;
+	poList.clear();
+	planetObj *npo = new planetObj(smgr, driver,vector3df(),vector3df(),vector3df(0,ROT,0),SystemMass/100, SystemMass/100);
+    poList.push_back((*npo));
+	for(float i=-5;i<5;i++)
+	{
+		for(float j=-5;j<5;j++)
+		{
+			for(float k=-5;k<5;k++)
+			{
+				planetObj *npo = new planetObj(smgr, driver,vector3df(i+(randf()-0.5)*3, j+(randf()-0.5)*3, k+(randf()-0.5))*3,vector3df(randf()-0.5,randf()-0.5,randf()-0.5),vector3df(0,ROT+randf()-0.5,0),randf()*50,randf()*50);
+				poList.push_back((*npo));
+			}
+		}
+	}
+}
+
 void solarSys::updatePhysics()
 {
     age++;
