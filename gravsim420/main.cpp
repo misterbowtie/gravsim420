@@ -63,12 +63,12 @@ int main()
  
 	driver->setAmbientLight(video::SColor(0,50,50,50));
  
-	ICameraSceneNode *cam ;//= smgr->addCameraSceneNode(0,vector3df(-50,50,-150), vector3df(0,0,0));
-    cam = smgr->addCameraSceneNodeFPS(0,100.0f, -200.0f, 500.0f);
+	ICameraSceneNode *normalCam = smgr->addCameraSceneNode(0,vector3df(-50,50,-150),vector3df(0,0,0));
+	ICameraSceneNode *fpsCam = smgr->addCameraSceneNodeFPS(0,100.0f, -200.0f, 500.0f);
     //device->getCursorControl()->setVisible(true);
 	solarSys newSolar(smgr, driver);
  
-	receiver.setup(smgr, cam, &newSolar, device);
+	receiver.setup(smgr, fpsCam, normalCam, &newSolar, device);
  
 	int lastTime=0;
 	vector3df largestStarPos;
@@ -121,14 +121,14 @@ int main()
 			strStats += newSolar.getPlanetCount();
 			strStats += L"\nNumPieces: ";
 			strStats += numPieces;
-			campos = cam->getPosition();
+			campos = fpsCam->getPosition();
 			strStats += L"\nX: ";
 			strStats += campos.X;
 			strStats += L"\nY: ";
 			strStats += campos.Y;
 			strStats += L"\nZ: ";
 			strStats += campos.Z;
-			camtarget = cam->getTarget();
+			camtarget = fpsCam->getTarget();
 			strStats += L"\ntX: ";
 			strStats += camtarget.X;
 			strStats += L"\ntY: ";

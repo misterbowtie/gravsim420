@@ -19,7 +19,8 @@ class MyEventReceiver : public IEventReceiver
 {
 private:
 	ISceneManager *smgr;
-	ICameraSceneNode *cam;
+	ICameraSceneNode *fpsCam;
+	ICameraSceneNode *normalCam;
 	solarSys *sys;
 	ISceneNode *selectedNode;
 	IrrlichtDevice *device;
@@ -28,10 +29,11 @@ private:
 	vector3df currCamTarget;
 public:
 	
-	void setup(ISceneManager *smgrz, ICameraSceneNode *camz, solarSys *sysz, IrrlichtDevice *devicez)
+	void setup(ISceneManager *smgrz, ICameraSceneNode *fpsCamz, ICameraSceneNode *normalCamz, solarSys *sysz, IrrlichtDevice *devicez)
 	{
 		smgr = smgrz;
-		cam = camz;
+		fpsCam = fpsCamz;
+		normalCam = normalCamz;
 		sys = sysz;
 		device = devicez;
 		mouseEnabled = true;
@@ -47,17 +49,17 @@ public:
 			{
 			case EMIE_RMOUSE_PRESSED_DOWN:
 				{
-					ISceneNode *selectedNode = smgr->getSceneCollisionManager()->getSceneNodeFromCameraBB(cam);
+					ISceneNode *selectedNode = smgr->getSceneCollisionManager()->getSceneNodeFromCameraBB(fpsCam);
 
 					if(selectedNode)
 					{
 						//type 1. changing parent nodes makes all kinds of control issues
-						cam->setParent(selectedNode);
-						cam->setPosition(vector3df(0,0,0));
-						cam->setTarget(sys->getStar()->getPosition());
+						fpsCam->setParent(selectedNode);
+						fpsCam->setPosition(vector3df(0,0,0));
+						fpsCam->setTarget(sys->getStar()->getPosition());
 						//type 2. may be cooler
-						//cam->setPosition(selectedNode->getPosition() - vector3df(1,1,1));
-						//cam->setTarget(selectedNode->getPosition());
+						//fpsCam->setPosition(selectedNode->getPosition() - vector3df(1,1,1));
+						//fpsCam->setTarget(selectedNode->getPosition());
 					}
 					break;
 				}
@@ -65,16 +67,16 @@ public:
 				{
 					//event.MouseInput.X;
 					//type 1. set camera back to root scene node
-					vector3df pos = cam->getAbsolutePosition();
-					cam->setParent(smgr->getRootSceneNode());
-					cam->setPosition(pos);
+					vector3df pos = fpsCam->getAbsolutePosition();
+					fpsCam->setParent(smgr->getRootSceneNode());
+					fpsCam->setPosition(pos);
 					
 					//type 2. do nothing
 					break;
 				}
 			case EMIE_LMOUSE_PRESSED_DOWN:
 				{
-					sys->spawnPlanet(cam->getPosition(), (cam->getTarget()-cam->getPosition()).normalize()*15);
+					sys->spawnPlanet(fpsCam->getPosition(), (fpsCam->getTarget()-fpsCam->getPosition()).normalize()*15);
 					break;
 				}
 			}
@@ -87,26 +89,26 @@ public:
 			case KEY_KEY_F:
 			case KEY_KEY_V:
 				{
-					vector3df v = cam->getPosition();
+					vector3df v = fpsCam->getPosition();
 					v.Y += event.KeyInput.Key == KEY_KEY_F ? 2.0f : -2.0f;
-					cam->setPosition(v);
+					fpsCam->setPosition(v);
 					break;
 				}
 
 			case KEY_KEY_A:
 			case KEY_KEY_D:
 				{
-					vector3df v = cam->getPosition();
+					vector3df v = fpsCam->getPosition();
 					v.X += event.KeyInput.Key == KEY_KEY_D ? 2.0f : -2.0f;
-					cam->setPosition(v);
+					fpsCam->setPosition(v);
 					break;
 				}
 			case KEY_KEY_W:
 			case KEY_KEY_S:
 				{
-					vector3df v = cam->getPosition();
+					vector3df v = fpsCam->getPosition();
 					v.Z += event.KeyInput.Key == KEY_KEY_W ? 2.0f : -2.0f;
-					cam->setPosition(v);
+					fpsCam->setPosition(v);
 					break;
 				}
 
@@ -155,9 +157,9 @@ public:
 			case KEY_KEY_E:
 				{
 					//planetObj* star = sys->getStar();  
-					//cam->setParent(star->node);
-					cam->setPosition(vector3df(35,35,35));
-					cam->setTarget(sys->getStar()->getPosition());
+					//fpsCam->setParent(star->node);
+					fpsCam->setPosition(vector3df(35,35,35));
+					fpsCam->setTarget(sys->getStar()->getPosition());
 					break;
 				}
 			case KEY_KEY_R:
@@ -174,24 +176,26 @@ public:
 				}
 			case KEY_KEY_Y:
 				{
-					cam->setPosition(vector3df(-35,-35,-35));
-					cam->setTarget(vector3df(0,0,0));
+					fpsCam->setPosition(vector3df(-35,-35,-35));
+					fpsCam->setTarget(vector3df(0,0,0));
 					break;
 				}
 			case KEY_KEY_Q:
 				{
 					if (mouseEnabled)
 					{
-						currCamPos = cam->getPosition();
-						currCamTarget = cam->getTarget();
-						cam = smgr->addCameraSceneNode(0,currCamPos,currCamTarget);
+						currCamPos = fpsCam->getPosition();
+						currCamTarget = fpsCam->getTarget();
+						normalCam->setPosition(currCamPos);
+						normalCam->setTarget(currCamTarget);
+						smgr->setActiveCamera(normalCam);
 						device->getCursorControl()->setVisible(true);
 					}
 					else
 					{
-						currCamPos = cam->getPosition();
-						currCamTarget = cam->getTarget();
-						cam = smgr->addCameraSceneNodeFPS(0,100.0f, -200.0f, 500.0f);
+						currCamPos = fpsCam->getPosition();
+						currCamTarget = fpsCam->getTarget();
+						smgr->setActiveCamera(fpsCam);
 						device->getCursorControl()->setVisible(false);
 					}
 					mouseEnabled = !mouseEnabled;
