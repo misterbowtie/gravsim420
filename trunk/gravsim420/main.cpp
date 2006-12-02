@@ -59,7 +59,7 @@ int main()
     guienv->addStaticText(L"GravSim",
                           rect<int>(255, 255, 255, 0), true);
  
-    ISceneNode* skyBoxNode = smgr->addSkyDomeSceneNode(driver->getTexture("media/backstars.jpg"),16,16,1,2);
+    //ISceneNode* skyBoxNode = smgr->addSkyDomeSceneNode(driver->getTexture("media/backstars.jpg"),16,16,1,2);
  
 	driver->setAmbientLight(video::SColor(0,50,50,50));
  
@@ -135,8 +135,8 @@ int main()
 			strStats += camtarget.Y;
 			strStats += L"\ntZ: ";
 			strStats += camtarget.Z;
+			stats->setText(strStats.c_str());
 		}
-		stats->setText(strStats.c_str());
 	}
  
     device->drop();
