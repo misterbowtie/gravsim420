@@ -72,7 +72,7 @@ int main()
 
 	int lastTime=0;
 	vector3df largestStarPos;
-	stringw str;
+	stringw strStats, strControls;
 	vector3df campos, camtarget;
 	while (device->run())
     {
@@ -91,32 +91,45 @@ int main()
 			
 		}
 		
-		str = L"";
-		str = L"Gravity: ";
-		str += G;
-		str += L"\nUpdates: ";
-		str += UpdatesPerFrame;
-		str += L"\nTimeStep: ";
-		str += t;
-		str += L"\nPlanets: ";
-		str += newSolar.getPlanetCount();
-		str += L"\nNumPieces: ";
-		str += numPieces;
+		strStats = L"";
+		strStats = L"Gravity: ";
+		strStats += G;
+		strStats += L"\nUpdates: ";
+		strStats += UpdatesPerFrame;
+		strStats += L"\nTimeStep: ";
+		strStats += t;
+		strStats += L"\nPlanets: ";
+		strStats += newSolar.getPlanetCount();
+		strStats += L"\nNumPieces: ";
+		strStats += numPieces;
 		campos = cam->getPosition();
-		str += L"\nX: ";
-		str += campos.X;
-		str += L"\nY: ";
-		str += campos.Y;
-		str += L"\nZ: ";
-		str += campos.Z;
+		strStats += L"\nX: ";
+		strStats += campos.X;
+		strStats += L"\nY: ";
+		strStats += campos.Y;
+		strStats += L"\nZ: ";
+		strStats += campos.Z;
 		camtarget = cam->getTarget();
-		str += L"\ntX: ";
-		str += camtarget.X;
-		str += L"\ntY: ";
-		str += camtarget.Y;
-		str += L"\ntZ: ";
-		str += camtarget.Z;
-		guienv->addStaticText(str.c_str(), rect<int>(10,10,120,120), true,true,0,-1,true);
+		strStats += L"\ntX: ";
+		strStats += camtarget.X;
+		strStats += L"\ntY: ";
+		strStats += camtarget.Y;
+		strStats += L"\ntZ: ";
+		strStats += camtarget.Z;
+
+		strControls = L"Controls";
+		strControls = L"\nGravity (J/K)";
+		strControls += L"\nUpdates (I/O/P)";
+		strControls += L"\nTimeStep (N/M)";
+		strControls += L"\nNumPieces (Z/X)";
+		strControls += L"\nResetCamera (E)";
+		strControls += L"\nResetSystem (R)";
+		strControls += L"\nResetDefault (T)";
+		strControls += L"\nOriginCam (Y)";
+		strControls += L"\nToggleMouse (Q)";
+
+		guienv->addStaticText(strStats.c_str(), rect<int>(10,10,120,120), true,true,0,-1,true);
+		guienv->addStaticText(strControls.c_str(), rect<int>(10,200,120,320), true,true,0,-1,true);
 	}
 
     device->drop();

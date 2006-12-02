@@ -34,7 +34,7 @@ public:
 		cam = camz;
 		sys = sysz;
 		device = devicez;
-		mouseEnabled = false;
+		mouseEnabled = true;
 	}
 
 	virtual bool OnEvent(SEvent event)
