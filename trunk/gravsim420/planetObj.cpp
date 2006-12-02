@@ -32,7 +32,6 @@ planetObj::planetObj(ISceneManager *smgrz, IVideoDriver* driverz, vector3df p = 
 
 planetObj::~planetObj()
 {
-    
 	node->remove();
    	if (D){cout<<"\nDELETE PLANET.";report();}
 }
@@ -61,9 +60,11 @@ void planetObj::join(planetObj *p2)
 
     volume += (*p2).volume;
 
-    changeAttb();
+	(*p2).createParticleExplosion();
+	
+	changeAttb();
 
-    if (D){
+	if (D){
         cout << "\nPlanet Joined";
     }
 }
@@ -86,7 +87,6 @@ void planetObj::move()
     node->setRotation(rotation);
 
     node->setPosition(position);
-	//emitter = particle->createPointEmitter();
 	
 }
 
@@ -136,12 +136,6 @@ void planetObj::explode(std::list<planetObj> &poList)
 
 	force/=numPieces;
 
-	//cout<<"\n sum of forces= "<<force.getLength();
-
-	/*for (; p1 != poList.end(); p1++)
-    {	(*p1).addForce(force);
-		(*p1).move();
-	}*/
 }
 
 void planetObj::changeAttb()
@@ -151,7 +145,7 @@ void planetObj::changeAttb()
 	//node->setMaterialFlag(video::EMF_NORMALIZE_NORMALS, true);  //fixes lighting?
 
     node->setMaterialFlag(EMF_LIGHTING, false);
-	particle->setEmitter(0);
+	//particle->setEmitter(0);
 
     if (mass>SystemMass*.1f)
     {	//star
@@ -217,12 +211,26 @@ float planetObj::getMass(){ return mass;}
 float planetObj::getSize(){ return size;}
 float planetObj::getVolume(){ return volume;}
 
-//void planetObj::setRotation(vector3df rotz){ rotation = rotz;}
-//void planetObj::setPosition(vector3df posz){ position = posz;}
-//void planetObj::setVelocity(vector3df velz){ velocity = velz;}
-//void planetObj::setForce(vector3df forcez){ force = forcez;}
-//void planetObj::setMass(float massz){ mass = massz;}
-//void planetObj::setSize(float sizez){ size = sizez;}
-//void planetObj::setVolume(float volz){ volume = volz;}
+void planetObj::createParticleExplosion()
+{
+
+	IParticleSystemSceneNode* ps = smgr->addParticleSystemSceneNode(false);
+	ps->setPosition((position));
+	ps->setParticleSize(dimension2d<f32>(size, size));
+	ps->setParticlesAreGlobal(false);  //makes it only create particles when changeattr is called
+	IParticleEmitter* em = ps->createPointEmitter(velocity.normalize()/500,4000,5000,SColor(0,255,255,255), SColor(0,255,255,255), volume*800, volume*1000,110);
+	ps->setEmitter(em);
+	em->drop();
+	IParticleAffector* paf = ps->createFadeOutParticleAffector();
+	ps->addAffector(paf);
+	paf->drop();
+
+	ps->setMaterialFlag(video::EMF_LIGHTING, false);
+	ps->setMaterialTexture(0, driver->getTexture("media/fire.bmp"));
+	ps->setMaterialType(video::EMT_TRANSPARENT_VERTEX_ALPHA);
+	
+	ISceneNodeAnimator *anim  = smgr->createDeleteAnimator(1000/UpdatesPerFrame);
+	ps->addAnimator(anim);
+}
 
 #endif

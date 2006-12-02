@@ -69,7 +69,7 @@ void solarSys::updatePhysics()
         {
 			r = (*p2).getPosition() - (*p1).getPosition();
 			dist = r.getLength();
-			if ((dist < (*p1).getSize()+(*p2).getSize()))
+			if (dist < (*p1).getSize()+(*p2).getSize()*.8) //collision
             {
                 (*p1).join(&(*p2));
                 p2 = poList.erase(p2);

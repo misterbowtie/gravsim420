@@ -43,13 +43,7 @@ public:
     float getVolume();
 	bool operator<(const planetObj &po){ return (mass>po.mass);}
 
-    /*void setRotation(vector3df rotz);
-    void setPosition(vector3df posz);
-    void setVelocity(vector3df velz);
-    void setForce(vector3df forcez);
-    void setMass(float massz);
-    void setSize(float sizez);
-    void setVolume(float volz);*/
+    void createParticleExplosion();
 
 
     ISceneNode *node;
@@ -71,6 +65,8 @@ private:
     float size;
 	vector3df a;
 };
+
+
 
 #include "planetObj.cpp"
 

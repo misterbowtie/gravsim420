@@ -58,18 +58,23 @@ int main()
     IGUIEnvironment* guienv = device->getGUIEnvironment();
     guienv->addStaticText(L"GravSim",
                           rect<int>(255, 255, 255, 0), true);
- 
     //ISceneNode* skyBoxNode = smgr->addSkyDomeSceneNode(driver->getTexture("media/backstars.jpg"),16,16,1,2);
- 
+	
+
 	driver->setAmbientLight(video::SColor(0,50,50,50));
  
 	ICameraSceneNode *normalCam = smgr->addCameraSceneNode(0,vector3df(-50,50,-150),vector3df(0,0,0));
 	ICameraSceneNode *fpsCam = smgr->addCameraSceneNodeFPS(0,100.0f, -200.0f, 500.0f);
-    //device->getCursorControl()->setVisible(true);
+    //device->getCursorControl()->setVisible(false);
 	solarSys newSolar(smgr, driver);
  
 	receiver.setup(smgr, fpsCam, normalCam, &newSolar, device);
  
+	IBillboardSceneNode *halo= smgr->addBillboardSceneNode();
+	halo->setMaterialFlag(video::EMF_LIGHTING, false);
+	halo->setMaterialTexture(0, driver->getTexture("media/halo.bmp") );	
+	halo->setMaterialType(video::EMT_TRANSPARENT_ADD_COLOR);;
+
 	int lastTime=0;
 	vector3df largestStarPos;
 	stringw strStats, strControls;
@@ -98,15 +103,30 @@ int main()
 		while(clock()-lastTime < ((float)CLK_TCK)/FramesPerSecond ); // prevent super speed
 		lastTime = clock();
  
+		
+		ISceneNode *selectedNode = smgr->getSceneCollisionManager()->getSceneNodeFromCameraBB(smgr->getActiveCamera());
+		if(selectedNode && selectedNode->getType()==scene::ESNT_SPHERE)
+		{
+			float haloScale =selectedNode->getScale().X*2.5+2;
+			halo->setSize(core::dimension2df(haloScale,haloScale));
+			
+			//if(!halo->getParent()) 
+				halo->grab();
+			halo->setParent(selectedNode);
+			halo->setVisible(true);
+		}
+		//else
+		//	halo->setVisible(false);
+		
 		driver->beginScene(true, true, SColor(0, 0, 0, 0));
         smgr->drawAll();
         guienv->drawAll();
         driver->endScene();
  
-        for (int j=0;j<UpdatesPerFrame;j++)  //see what happens when you comment this out on alienware
+		
+		for (int j=0;j<UpdatesPerFrame;j++)  
         {
             newSolar.updatePhysics();
- 
 		}
  
 		if(clock()-lastTime < ((float)CLK_TCK)/FramesPerSecond)
@@ -139,7 +159,7 @@ int main()
 		}
 	}
  
-    device->drop();
+    //device->drop();
  
     return 0;
 }
