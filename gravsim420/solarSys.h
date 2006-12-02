@@ -30,6 +30,7 @@ public:
     ~solarSys();
 
     void reset();
+	void resetMatt();
     void updatePhysics();
     planetObj* getStar();
 	void printList();
