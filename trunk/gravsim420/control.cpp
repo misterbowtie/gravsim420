@@ -54,12 +54,13 @@ public:
 					if(selectedNode)
 					{
 						//type 1. changing parent nodes makes all kinds of control issues
-						fpsCam->setParent(selectedNode);
-						fpsCam->setPosition(vector3df(0,0,0));
-						fpsCam->setTarget(sys->getStar()->getPosition());
+						//fpsCam->setParent(selectedNode);
+						//fpsCam->setPosition(vector3df(0,0,0));
+						//fpsCam->setTarget(sys->getStar()->getPosition());
 						//type 2. may be cooler
-						//fpsCam->setPosition(selectedNode->getPosition() - vector3df(1,1,1));
-						//fpsCam->setTarget(selectedNode->getPosition());
+						currCamPos = fpsCam->getPosition();
+						fpsCam->setPosition(selectedNode->getPosition());
+						fpsCam->setTarget(currCamPos);
 					}
 					break;
 				}
