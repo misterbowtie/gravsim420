@@ -165,6 +165,7 @@ public:
 					G=1;
 					UpdatesPerFrame = 1;
 					t=.05;
+					numPieces = 1000;
 					break;
 				}
 			case KEY_KEY_Y:
