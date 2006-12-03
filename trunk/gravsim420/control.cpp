@@ -119,7 +119,6 @@ public:
 					UpdatesPerFrame += event.KeyInput.Key == KEY_KEY_I ? -1 : 1;
 					if(UpdatesPerFrame<0) UpdatesPerFrame=0;
 					else if(UpdatesPerFrame>100) UpdatesPerFrame=100;
-					printf("\nUpdates: %d",UpdatesPerFrame);
 					break;
 				}
 			case KEY_KEY_J:
@@ -128,7 +127,6 @@ public:
 					G += event.KeyInput.Key == KEY_KEY_J ? -0.025 : 0.025;
 					if(G < -10) G = -10;
 					else if(G > 10) G = 10;
-					printf("\nGravity: %f", G);
 					break;
 				}
 			case KEY_KEY_N:
@@ -137,7 +135,6 @@ public:
 					t += event.KeyInput.Key == KEY_KEY_N ? -0.001 : 0.001;
 					if(t<0) t=0;
 					else if(t>1) t=1;
-					printf("\nTimeStep: %f",t);
 					break;
 				}
 			case KEY_KEY_Z:
@@ -146,13 +143,11 @@ public:
 					numPieces += event.KeyInput.Key == KEY_KEY_Z ? -5 : 5;
 					if(numPieces<50) numPieces=50;
 					else if(numPieces>1000) numPieces=1000;
-					printf("\nNumPieces: %f",numPieces);
 					break;
 				}
 			case KEY_KEY_P:
 				{
 					UpdatesPerFrame = 0;
-					printf("\nUpdates: %d",UpdatesPerFrame);
 					break;
 				}
 			case KEY_KEY_E:

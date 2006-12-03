@@ -60,6 +60,8 @@ int main()
                           rect<int>(255, 255, 255, 0), true);
     //ISceneNode* skyBoxNode = smgr->addSkyDomeSceneNode(driver->getTexture("media/backstars.jpg"),16,16,1,2);
 	
+	// Un-Comment to remove the console window from build
+	#pragma comment(linker, "/SUBSYSTEM:WINDOWS /ENTRY:mainCRTStartup") 
 
 	driver->setAmbientLight(video::SColor(0,50,50,50));
  
@@ -129,34 +131,31 @@ int main()
             newSolar.updatePhysics();
 		}
  
-		if(clock()-lastTime < ((float)CLK_TCK)/FramesPerSecond)
-		{
-			strStats = L"Gravity: ";
-			strStats += G;
-			strStats += L"\nUpdates: ";
-			strStats += UpdatesPerFrame;
-			strStats += L"\nTimeStep: ";
-			strStats += t;
-			strStats += L"\nPlanets: ";
-			strStats += newSolar.getPlanetCount();
-			strStats += L"\nNumPieces: ";
-			strStats += numPieces;
-			campos = fpsCam->getPosition();
-			strStats += L"\nX: ";
-			strStats += campos.X;
-			strStats += L"\nY: ";
-			strStats += campos.Y;
-			strStats += L"\nZ: ";
-			strStats += campos.Z;
-			camtarget = fpsCam->getTarget();
-			strStats += L"\ntX: ";
-			strStats += camtarget.X;
-			strStats += L"\ntY: ";
-			strStats += camtarget.Y;
-			strStats += L"\ntZ: ";
-			strStats += camtarget.Z;
-			stats->setText(strStats.c_str());
-		}
+		strStats = L"Gravity: ";
+		strStats += G;
+		strStats += L"\nUpdates: ";
+		strStats += UpdatesPerFrame;
+		strStats += L"\nTimeStep: ";
+		strStats += t;
+		strStats += L"\nPlanets: ";
+		strStats += newSolar.getPlanetCount();
+		strStats += L"\nNumPieces: ";
+		strStats += numPieces;
+		campos = fpsCam->getPosition();
+		strStats += L"\nX: ";
+		strStats += campos.X;
+		strStats += L"\nY: ";
+		strStats += campos.Y;
+		strStats += L"\nZ: ";
+		strStats += campos.Z;
+		camtarget = fpsCam->getTarget();
+		strStats += L"\ntX: ";
+		strStats += camtarget.X;
+		strStats += L"\ntY: ";
+		strStats += camtarget.Y;
+		strStats += L"\ntZ: ";
+		strStats += camtarget.Z;
+		stats->setText(strStats.c_str());
 	}
  
     //device->drop();
